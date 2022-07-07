@@ -17,7 +17,7 @@ export class FacebookAuthService implements FacebookAuthService {
   ) {}
 
   async perform (dto: FacebookAuthDto): Promise<FacebookAuthResult> {
-    const fbData = await this.facebookApi.loadUser(dto.token)
+    const fbData = await this.facebookApi.loadUser({ token: dto.token })
     if (fbData !== undefined) {
       const accountData = await this.accountRepo.loadByEmail({ email: fbData.email })
       const fbAccount = new FacebookAccount(fbData, accountData)

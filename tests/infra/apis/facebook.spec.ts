@@ -13,6 +13,7 @@ const makeSut = (): SutTypes => {
   httpClient.get
     .mockResolvedValueOnce({ access_token: 'any_app_token' })
     .mockResolvedValueOnce({ data: { user_id: 'any_user_id' } })
+    .mockResolvedValueOnce({ id: 'any_fb_id', name: 'any_fb_name', email: 'any_fb_email' })
   const sut = new FacebookApi(httpClient, clientId, clientSecret)
   return {
     sut,
@@ -52,7 +53,7 @@ describe('Facebook API', () => {
     })
   })
 
-  it('should get user info token', async () => {
+  it('should get user info', async () => {
     const { sut, httpClient } = makeSut()
     await sut.loadUser({ token })
 
@@ -62,6 +63,17 @@ describe('Facebook API', () => {
         fields: 'id,name,email',
         access_token: 'any_client_token'
       }
+    })
+  })
+
+  it('should return facebook user', async () => {
+    const { sut } = makeSut()
+    const fbUser = await sut.loadUser({ token })
+
+    expect(fbUser).toEqual({
+      facebookId: 'any_fb_id',
+      name: 'any_fb_name',
+      email: 'any_fb_email'
     })
   })
 })

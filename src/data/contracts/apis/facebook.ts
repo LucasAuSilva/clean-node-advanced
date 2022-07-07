@@ -1,8 +1,8 @@
 export interface LoadFacebookUserApi {
-  loadUser: (token: string) => Promise<LoadFacebookUserApiReturn>
+  loadUser: (dto: LoadFacebookUserApiDto) => Promise<LoadFacebookUserApiResult>
 }
 
-export type LoadFacebookUserApiReturn = undefined | {
+export type LoadFacebookUserApiResult = undefined | {
   facebookId: string
   name: string
   email: string

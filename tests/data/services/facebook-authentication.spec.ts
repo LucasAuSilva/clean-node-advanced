@@ -46,7 +46,7 @@ describe('Facebook Authentication Service', () => {
   it('should call LoadFacebookUserApi with correct values', async () => {
     const { sut, facebookApi } = makeSut()
     await sut.perform({ token: 'any_token' })
-    expect(facebookApi.loadUser).toHaveBeenCalledWith(token)
+    expect(facebookApi.loadUser).toHaveBeenCalledWith({ token })
     expect(facebookApi.loadUser).toHaveBeenCalledTimes(1)
   })
 
