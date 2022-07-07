@@ -105,11 +105,20 @@ describe('Facebook Authentication Service', () => {
   })
 
   it('should rethrow if LoadAccountByEmailRepository throws', async () => {
-    const { sut, facebookApi } = makeSut()
-    facebookApi.loadUser.mockRejectedValueOnce(new Error('load_error'))
+    const { sut, accountRepo } = makeSut()
+    accountRepo.loadByEmail.mockRejectedValueOnce(new Error('load_error'))
 
     const promise = sut.perform({ token })
 
     await expect(promise).rejects.toThrow(new Error('load_error'))
+  })
+
+  it('should rethrow if SaveFacebookAccountRepository throws', async () => {
+    const { sut, accountRepo } = makeSut()
+    accountRepo.saveWithFacebook.mockRejectedValueOnce(new Error('save_error'))
+
+    const promise = sut.perform({ token })
+
+    await expect(promise).rejects.toThrow(new Error('save_error'))
   })
 })
