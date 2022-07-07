@@ -103,4 +103,13 @@ describe('Facebook Authentication Service', () => {
 
     await expect(promise).rejects.toThrow(new Error('fb_error'))
   })
+
+  it('should rethrow if LoadAccountByEmailRepository throws', async () => {
+    const { sut, facebookApi } = makeSut()
+    facebookApi.loadUser.mockRejectedValueOnce(new Error('load_error'))
+
+    const promise = sut.perform({ token })
+
+    await expect(promise).rejects.toThrow(new Error('load_error'))
+  })
 })
