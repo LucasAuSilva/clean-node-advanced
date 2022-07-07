@@ -1,0 +1,17 @@
+# Authentication with Facebook
+
+## Data
+* Access Token
+
+## Primary flow
+1. [ ] Get the data (name, email and Facebook ID) from the Facebook API
+2. [ ] Check if exists an user with the email provided
+3. [ ] Create an account for the user with the data provided by Facebook
+4. [ ] Create an Access Token, by the user ID, with expiration of 30 min
+5. [ ] Return the Access Token generated
+
+## Alternative flow: User already exists
+3. [ ] Update the account from user with the data provided by Facebook (Facebook ID and name - only update name if user account doesn't have one)
+
+## Exception flow
+1. [ ] Return an authenticate error
