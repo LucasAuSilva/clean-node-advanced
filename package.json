@@ -2,21 +2,39 @@
   "name": "clean-node-advanced",
   "version": "1.0.0",
   "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/LucasAuSilva/clean-node-advanced#readme",
+  "author": {
+    "name": "Lucas Augusto da Silva",
+    "email": "silvaaugustolucas@gmail.com",
+    "url": "https://github.com/LucasAuSilva"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LucasAuSilva/clean-node-advanced"
+  },
+  "bugs": {
+    "url": "https://github.com/LucasAuSilva/clean-node-advanced/issues",
+    "email": "silvaaugustolucas@gmail.com"
+  },
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "test": "jest --passWithNoTests --no-cache --runInBand",
+    "test:watch": "npm test -- --watch",
+    "test:coverage": "npm test -- --coverage",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^28.1.4",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^18.0.3",
     "eslint": "^8.19.0",
     "eslint-config-standard-with-typescript": "^22.0.0",
+    "jest": "^28.1.2",
+    "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
   "engines": {
