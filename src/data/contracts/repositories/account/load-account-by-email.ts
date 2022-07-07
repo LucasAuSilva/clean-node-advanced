@@ -6,4 +6,7 @@ type LoadAccountByEmailRepositoryDto = {
   email: string
 }
 
-type LoadAccountByEmailRepositoryResult = undefined
+type LoadAccountByEmailRepositoryResult = undefined | {
+  id: string
+  name?: string
+}
