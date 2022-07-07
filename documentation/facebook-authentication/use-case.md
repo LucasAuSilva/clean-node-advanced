@@ -14,4 +14,4 @@
 3. [ ] Update the account from user with the data provided by Facebook (Facebook ID and name - only update name if user account doesn't have one)
 
 ## Exception flow
-1. [ ] Return an authenticate error
+1. [x] Return an authenticate error
