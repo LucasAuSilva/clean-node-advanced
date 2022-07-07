@@ -1,10 +1,8 @@
 export interface HttpGetClient {
-  get: (dto: HttpGetClientDto) => Promise<HttpClientGetResult>
+  get: <T = any> (dto: HttpGetClientDto) => Promise<T>
 }
 
 export type HttpGetClientDto = {
   url: string
   params: object
 }
-
-type HttpClientGetResult = any
