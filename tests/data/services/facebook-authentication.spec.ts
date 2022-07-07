@@ -1,13 +1,14 @@
 import { AuthenticationError } from '@/domain/errors'
-import { FacebookAuthenticationService } from '@/data/services'
+import { FacebookAuthService } from '@/data/services'
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
-import { LoadAccountByEmailRepository } from '@/data/contracts/repositories'
+import { CreateFacebookAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repositories/account'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 type SutTypes = {
-  sut: FacebookAuthenticationService
+  sut: FacebookAuthService
   loadFacebookUserApi: MockProxy<LoadFacebookUserApi>
   loadAccountByEmailRepo: MockProxy<LoadAccountByEmailRepository>
+  createFacebookAccountRepo: MockProxy<CreateFacebookAccountRepository>
 }
 
 const makeSut = (): SutTypes => {
@@ -18,11 +19,14 @@ const makeSut = (): SutTypes => {
     facebookId: 'any_fb_id'
   })
   const loadAccountByEmailRepo = mock<LoadAccountByEmailRepository>()
-  const sut = new FacebookAuthenticationService(loadFacebookUserApi, loadAccountByEmailRepo)
+  const createFacebookAccountRepo = mock<CreateFacebookAccountRepository>()
+  const sut = new FacebookAuthService(loadFacebookUserApi,
+    loadAccountByEmailRepo, createFacebookAccountRepo)
   return {
     sut,
     loadFacebookUserApi,
-    loadAccountByEmailRepo
+    loadAccountByEmailRepo,
+    createFacebookAccountRepo
   }
 }
 
@@ -48,5 +52,17 @@ describe('Facebook Authentication Service', () => {
     await sut.perform({ token })
     expect(loadAccountByEmailRepo.loadByEmail).toHaveBeenCalledWith({ email: 'any_fb_email' })
     expect(loadAccountByEmailRepo.loadByEmail).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call CreateAccountRepo when LoadFacebookUserApi returns undefined', async () => {
+    const { sut, loadAccountByEmailRepo, createFacebookAccountRepo } = makeSut()
+    loadAccountByEmailRepo.loadByEmail.mockResolvedValueOnce(undefined)
+    await sut.perform({ token })
+    expect(createFacebookAccountRepo.createFromFacebook).toHaveBeenCalledWith({
+      email: 'any_fb_email',
+      name: 'any_fb_name',
+      facebookId: 'any_fb_id'
+    })
+    expect(createFacebookAccountRepo.createFromFacebook).toHaveBeenCalledTimes(1)
   })
 })

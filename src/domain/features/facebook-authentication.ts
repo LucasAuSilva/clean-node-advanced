@@ -1,12 +1,12 @@
 import { AccessToken } from '@/domain/models/access-token'
 import { AuthenticationError } from '@/domain/errors'
 
-export interface FacebookAuthentication {
-  perform: (dto: FacebookAuthenticationDto) => Promise<FacebookAuthenticationResult>
+export interface FacebookAuth {
+  perform: (dto: FacebookAuthDto) => Promise<FacebookAuthResult>
 }
 
-export type FacebookAuthenticationDto = {
+export type FacebookAuthDto = {
   token: string
 }
 
-export type FacebookAuthenticationResult = AccessToken | AuthenticationError
+export type FacebookAuthResult = AccessToken | AuthenticationError
