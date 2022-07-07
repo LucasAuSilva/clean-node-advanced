@@ -21,6 +21,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
+  const accountRepo = mock<SaveFacebookAccountRepository & LoadAccountByEmailRepository>()
   const facebookApi = mock<LoadFacebookUserApi>()
   const crypto = mock<TokenGenerator>()
   facebookApi.loadUser.mockResolvedValue({
@@ -28,7 +29,6 @@ const makeSut = (): SutTypes => {
     email: 'any_fb_email',
     facebookId: 'any_fb_id'
   })
-  const accountRepo = mock<SaveFacebookAccountRepository & LoadAccountByEmailRepository>()
   accountRepo.saveWithFacebook.mockResolvedValue({ id: 'any_account_id' })
   crypto.generateToken.mockResolvedValue('any_generated_token')
   const sut = new FacebookAuthService(facebookApi, accountRepo, crypto)
@@ -120,5 +120,14 @@ describe('Facebook Authentication Service', () => {
     const promise = sut.perform({ token })
 
     await expect(promise).rejects.toThrow(new Error('save_error'))
+  })
+
+  it('should rethrow if TokenGenerator throws', async () => {
+    const { sut, crypto } = makeSut()
+    crypto.generateToken.mockRejectedValueOnce(new Error('generator_error'))
+
+    const promise = sut.perform({ token })
+
+    await expect(promise).rejects.toThrow(new Error('generator_error'))
   })
 })
