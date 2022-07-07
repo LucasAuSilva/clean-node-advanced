@@ -7,3 +7,7 @@ export type LoadFacebookUserApiReturn = undefined | {
   name: string
   email: string
 }
+
+export type LoadFacebookUserApiDto = {
+  token: string
+}
