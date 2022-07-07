@@ -7,6 +7,7 @@ import {
   LoadAccountByEmailRepository,
   SaveFacebookAccountRepository
 } from '@/data/contracts/repositories/account'
+import { AccessToken } from '@/domain/models/authentication'
 
 export class FacebookAuthService {
   constructor (
@@ -21,7 +22,7 @@ export class FacebookAuthService {
       const accountData = await this.accountRepo.loadByEmail({ email: fbData.email })
       const fbAccount = new FacebookAccount(fbData, accountData)
       const { id } = await this.accountRepo.saveWithFacebook(fbAccount)
-      await this.crypto.generateToken({ key: id })
+      await this.crypto.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
     }
     return new AuthenticationError()
   }

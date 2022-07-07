@@ -1,3 +1,4 @@
+import { AccessToken } from '@/domain/models/authentication'
 import { FacebookAccount } from '@/domain/models/account'
 import { AuthenticationError } from '@/domain/errors'
 import { TokenGenerator } from '@/data/contracts/crypto'
@@ -78,7 +79,10 @@ describe('Facebook Authentication Service', () => {
 
     await sut.perform({ token })
 
-    expect(crypto.generateToken).toHaveBeenCalledWith({ key: 'any_account_id' })
+    expect(crypto.generateToken).toHaveBeenCalledWith({
+      key: 'any_account_id',
+      expirationInMs: AccessToken.expirationInMs
+    })
     expect(crypto.generateToken).toHaveBeenCalledTimes(1)
   })
 })

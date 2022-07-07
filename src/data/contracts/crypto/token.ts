@@ -4,4 +4,5 @@ export interface TokenGenerator {
 
 export type TokenGeneratorDto = {
   key: string
+  expirationInMs: number
 }
