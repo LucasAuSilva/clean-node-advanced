@@ -1,12 +1,11 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
-type PrismaClientTypeOrNull = PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined> | null
-type PrismaClientType = PrismaClient<Prisma.PrismaClientOptions, never, Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+type PrismaHelperClient = PrismaClient | null
 
 export const PrismaHelper = {
-  client: null as PrismaClientTypeOrNull,
+  client: null as PrismaHelperClient,
 
-  async connect (): Promise<PrismaClientType> {
+  async connect (): Promise<PrismaClient> {
     this.client = new PrismaClient()
     return this.client
   },
