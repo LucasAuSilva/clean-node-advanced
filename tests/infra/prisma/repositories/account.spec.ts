@@ -9,9 +9,14 @@ import { PrismaHelper } from '@/infra/prisma/helpers'
 import { PrismaClient } from '@prisma/client'
 
 class PrismaAccountRepository implements LoadAccountByEmailRepository {
+  private readonly prisma: PrismaClient
+
+  constructor () {
+    this.prisma = new PrismaClient()
+  }
+
   async loadByEmail (dto: LoadAccountByEmailRepositoryDto): Promise<LoadAccountByEmailRepositoryResult> {
-    const prisma = await PrismaHelper.connect()
-    const account = await prisma.account.findFirst({ where: { email: dto.email } })
+    const account = await this.prisma.account.findFirst({ where: { email: dto.email } })
     if (account !== null) {
       return {
         id: account.id.toString(),
@@ -21,9 +26,8 @@ class PrismaAccountRepository implements LoadAccountByEmailRepository {
   }
 
   async saveWithFacebook (dto: SaveFacebookAccountRepositoryDto): Promise<void> {
-    const prisma = await PrismaHelper.connect()
     const id = dto.id === undefined ? 0 : Number.parseInt(dto.id)
-    await prisma.account.upsert(
+    await this.prisma.account.upsert(
       {
         where: { id },
         create: { email: dto.email, name: dto.name, facebookId: dto.facebookId },
