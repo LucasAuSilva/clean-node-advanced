@@ -32,7 +32,7 @@ describe('PrismaAccount Repository', () => {
     it('should return an account if email exists', async () => {
       const sut = new PrismaAccountRepository()
       const prisma = await PrismaHelper.connect()
-      await prisma.account.create({
+      const result = await prisma.account.create({
         data: {
           email: 'existing_email'
         }
@@ -40,7 +40,14 @@ describe('PrismaAccount Repository', () => {
 
       const account = await sut.loadByEmail({ email: 'existing_email' })
 
-      expect(account).toBeTruthy()
+      expect(account).toEqual({ id: result.id.toString(), name: undefined })
+    })
+
+    it('should return undefined if email does not exists', async () => {
+      const sut = new PrismaAccountRepository()
+      const account = await sut.loadByEmail({ email: 'existing_email' })
+
+      expect(account).toBe(undefined)
     })
   })
 })
