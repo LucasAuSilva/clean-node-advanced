@@ -32,6 +32,15 @@
     "migrate:test": "npx prisma migrate dev --schema tests/infra/prisma/db/schema.prisma",
     "prepare": "husky install"
   },
+  "dependencies": {
+    "@prisma/client": "^4.0.0",
+    "axios": "^0.27.2",
+    "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
+    "prisma-merge": "^0.2.0",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2"
+  },
   "devDependencies": {
     "@types/jest": "^28.1.4",
     "@types/jsonwebtoken": "^8.5.8",
@@ -51,15 +60,6 @@
   },
   "engines": {
     "node": "16.x"
-  },
-  "dependencies": {
-    "@prisma/client": "^4.0.0",
-    "axios": "^0.27.2",
-    "jsonwebtoken": "^8.5.1",
-    "module-alias": "^2.2.2",
-    "prisma-merge": "^0.2.0",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2"
   },
   "prisma": {
     "schema": "src/infra/prisma/db/schema.prisma"
