@@ -1,40 +1,7 @@
-import {
-  LoadAccountByEmailRepository,
-  LoadAccountByEmailRepositoryDto,
-  LoadAccountByEmailRepositoryResult,
-  SaveFacebookAccountRepositoryDto
-} from '@/data/contracts/repositories/account'
-import { PrismaHelper } from '@/infra/prisma/helpers'
+import { PrismaAccountRepository } from '@/infra/prisma/repositories'
+import { PrismaHelper } from '@/tests/infra/prisma/helpers'
 
 import { PrismaClient } from '@prisma/client'
-
-class PrismaAccountRepository implements LoadAccountByEmailRepository {
-  private readonly prisma: PrismaClient
-
-  constructor () {
-    this.prisma = new PrismaClient()
-  }
-
-  async loadByEmail (dto: LoadAccountByEmailRepositoryDto): Promise<LoadAccountByEmailRepositoryResult> {
-    const account = await this.prisma.account.findFirst({ where: { email: dto.email } })
-    if (account !== null) {
-      return {
-        id: account.id.toString(),
-        name: account.name ?? undefined
-      }
-    }
-  }
-
-  async saveWithFacebook (dto: SaveFacebookAccountRepositoryDto): Promise<void> {
-    const id = dto.id === undefined ? 0 : Number.parseInt(dto.id)
-    await this.prisma.account.upsert(
-      {
-        where: { id },
-        create: { email: dto.email, name: dto.name, facebookId: dto.facebookId },
-        update: { name: dto.name, facebookId: dto.facebookId }
-      })
-  }
-}
 
 type SutTypes = {
   sut: PrismaAccountRepository
@@ -58,7 +25,7 @@ describe('PrismaAccount Repository', () => {
   afterEach(async () => {
     const prisma = await PrismaHelper.connect()
     await prisma.account.deleteMany({})
-    await prisma.$disconnect()
+    await PrismaHelper.disconnect()
   })
 
   describe('loadByEmail', () => {
