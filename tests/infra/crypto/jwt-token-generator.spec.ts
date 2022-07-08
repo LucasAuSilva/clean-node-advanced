@@ -15,10 +15,23 @@ class JwtTokenGenerator {
   }
 }
 
+type SutTypes = {
+  sut: JwtTokenGenerator
+  fakeJwt: jest.Mocked<typeof jwt>
+}
+
+const makeSut = (): SutTypes => {
+  const fakeJwt = jwt as jest.Mocked<typeof jwt>
+  const sut = new JwtTokenGenerator('any_secret')
+  return {
+    sut,
+    fakeJwt
+  }
+}
+
 describe('JwtToken Generator', () => {
   it('should call sign with correct values', async () => {
-    const fakeJwt = jwt as jest.Mocked<typeof jwt>
-    const sut = new JwtTokenGenerator('any_secret')
+    const { sut, fakeJwt } = makeSut()
     await sut.generateToken({
       key: 'any_key',
       expirationInMs: 1000
