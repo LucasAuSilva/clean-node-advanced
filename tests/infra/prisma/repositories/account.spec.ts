@@ -54,7 +54,7 @@ describe('PrismaAccount Repository', () => {
     it('should create an account if id is undefined', async () => {
       const { sut, prisma } = await makeSut()
 
-      await sut.saveWithFacebook({
+      const { id } = await sut.saveWithFacebook({
         email: 'any_email',
         name: 'any_name',
         facebookId: 'any_fb_id'
@@ -62,7 +62,7 @@ describe('PrismaAccount Repository', () => {
       const account = await prisma.account.findMany({ where: { email: 'any_email' } })
 
       expect(account.length).toBe(1)
-      expect(account[0]?.id).toBeTruthy()
+      expect(id).toBe(account[0].id.toString())
       expect(account[0]?.name).toBe('any_name')
       expect(account[0]?.facebookId).toBe('any_fb_id')
     })

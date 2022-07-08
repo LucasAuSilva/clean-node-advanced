@@ -9,6 +9,6 @@ export type SaveFacebookAccountRepositoryDto = {
   facebookId: string
 }
 
-type SaveFacebookAccountRepositoryResult = {
+export type SaveFacebookAccountRepositoryResult = {
   id: string
 }
