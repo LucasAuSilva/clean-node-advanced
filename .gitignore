@@ -4,5 +4,5 @@ node_modules
 .DS_Store
 coverage
 .env
-tests/**/*.db
-tests/**/*.db-journal
+tests/**/test-db
+

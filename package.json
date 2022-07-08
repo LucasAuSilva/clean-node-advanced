@@ -30,7 +30,7 @@
     "schema:prod": "npx prisma-merge -b src/infra/prisma/db/prod.base.prisma -o src/infra/prisma/db/schema.prisma",
     "schema:test": "npx prisma-merge -b tests/infra/prisma/db/test.base.prisma -s src/**/schemas/* -o tests/infra/prisma/db/schema.prisma",
     "migrate:test": "npx prisma migrate dev --schema tests/infra/prisma/db/schema.prisma",
-    "env:test": "npm run schema:test && npm run migrate:test",
+    "env:test": "rimraf tests/infra/prisma/test-db && npm run schema:test && npm run migrate:test",
     "prepare": "husky install"
   },
   "dependencies": {
