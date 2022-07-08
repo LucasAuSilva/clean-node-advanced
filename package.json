@@ -23,11 +23,13 @@
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "migrate:test": "npx prisma migrate dev --schema tests/infra/prisma/schemas/test.prisma",
     "test": "jest --passWithNoTests --runInBand --no-cache",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:coverage": "npm test -- --coverage",
+    "schema:prod": "npx prisma-merge -b src/infra/prisma/db/prod.base.prisma -o src/infra/prisma/db/schema.prisma",
+    "schema:test": "npx prisma-merge -b tests/infra/prisma/db/test.base.prisma -s src/**/schemas/* -o tests/infra/prisma/db/schema.prisma",
+    "migrate:test": "npx prisma migrate dev --schema tests/infra/prisma/db/schema.prisma",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -55,10 +57,11 @@
     "axios": "^0.27.2",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
+    "prisma-merge": "^0.2.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2"
   },
   "prisma": {
-    "schema": "src/infra/db/prisma/schemas/production.prisma"
+    "schema": "src/infra/prisma/db/schema.prisma"
   }
 }

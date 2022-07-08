@@ -1,0 +1,8 @@
+model Account {
+  id         Int    @id @default(autoincrement())
+  name       String? @map("nome")
+  email      String
+  facebookId String? @map("id_facebook")
+
+  @@map("usuarios")
+}
