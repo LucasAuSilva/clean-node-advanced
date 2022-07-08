@@ -23,6 +23,7 @@
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
+    "migrate:test": "npx prisma migrate dev --schema tests/infra/prisma/schemas/test.prisma",
     "test": "jest --passWithNoTests --runInBand --no-cache",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
@@ -41,6 +42,8 @@
     "jest": "^28.1.2",
     "jest-mock-extended": "^2.0.6",
     "lint-staged": "^13.0.3",
+    "pg-mem": "^2.6.2",
+    "prisma": "^4.0.0",
     "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
@@ -48,9 +51,14 @@
     "node": "16.x"
   },
   "dependencies": {
+    "@prisma/client": "^4.0.0",
     "axios": "^0.27.2",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
+    "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2"
+  },
+  "prisma": {
+    "schema": "src/infra/db/prisma/schemas/production.prisma"
   }
 }

@@ -2,11 +2,11 @@ export interface LoadAccountByEmailRepository {
   loadByEmail: (dto: LoadAccountByEmailRepositoryDto) => Promise<LoadAccountByEmailRepositoryResult>
 }
 
-type LoadAccountByEmailRepositoryDto = {
+export type LoadAccountByEmailRepositoryDto = {
   email: string
 }
 
-type LoadAccountByEmailRepositoryResult = undefined | {
+export type LoadAccountByEmailRepositoryResult = undefined | {
   id: string
   name?: string
 }
