@@ -22,7 +22,13 @@ class PrismaAccountRepository implements LoadAccountByEmailRepository {
 
   async saveWithFacebook (dto: SaveFacebookAccountRepositoryDto): Promise<void> {
     const prisma = await PrismaHelper.connect()
-    await prisma.account.create({ data: { email: dto.email, name: dto.name, facebookId: dto.facebookId } })
+    const id = dto.id === undefined ? 0 : Number.parseInt(dto.id)
+    await prisma.account.upsert(
+      {
+        where: { id },
+        create: { email: dto.email, name: dto.name, facebookId: dto.facebookId },
+        update: { name: dto.name, facebookId: dto.facebookId }
+      })
   }
 }
 
@@ -73,7 +79,7 @@ describe('PrismaAccount Repository', () => {
     })
   })
 
-  describe('loadByEmail', () => {
+  describe('saveWithFacebook', () => {
     it('should create an account if id is undefined', async () => {
       const { sut, prisma } = await makeSut()
 
@@ -82,11 +88,39 @@ describe('PrismaAccount Repository', () => {
         name: 'any_name',
         facebookId: 'any_fb_id'
       })
-      const account = await prisma.account.findFirst({ where: { email: 'any_email' } })
+      const account = await prisma.account.findMany({ where: { email: 'any_email' } })
 
-      expect(account?.id).toBeTruthy()
-      expect(account?.name).toBe('any_name')
-      expect(account?.facebookId).toBe('any_fb_id')
+      expect(account.length).toBe(1)
+      expect(account[0]?.id).toBeTruthy()
+      expect(account[0]?.name).toBe('any_name')
+      expect(account[0]?.facebookId).toBe('any_fb_id')
+    })
+
+    it('should update an account if id is defined', async () => {
+      const { sut, prisma } = await makeSut()
+
+      const result = await prisma.account.create({
+        data: {
+          email: 'any_email',
+          name: 'any_name',
+          facebookId: 'any_fb_id'
+        }
+      })
+      await sut.saveWithFacebook({
+        id: result.id.toString(),
+        email: 'other_email',
+        name: 'other_name',
+        facebookId: 'other_fb_id'
+      })
+      const account = await prisma.account.findMany({ where: { id: result.id } })
+
+      expect(account.length).toBe(1)
+      expect(account[0]).toEqual({
+        id: result.id,
+        email: 'any_email',
+        name: 'other_name',
+        facebookId: 'other_fb_id'
+      })
     })
   })
 })
