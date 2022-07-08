@@ -77,7 +77,7 @@ describe('PrismaAccount Repository', () => {
           facebookId: 'any_fb_id'
         }
       })
-      await sut.saveWithFacebook({
+      const { id } = await sut.saveWithFacebook({
         id: result.id.toString(),
         email: 'other_email',
         name: 'other_name',
@@ -86,6 +86,7 @@ describe('PrismaAccount Repository', () => {
       const account = await prisma.account.findMany({ where: { id: result.id } })
 
       expect(account.length).toBe(1)
+      expect(id).toBe(account[0].id.toString())
       expect(account[0]).toEqual({
         id: result.id,
         email: 'any_email',
