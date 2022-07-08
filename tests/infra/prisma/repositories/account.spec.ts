@@ -1,7 +1,8 @@
 import {
   LoadAccountByEmailRepository,
   LoadAccountByEmailRepositoryDto,
-  LoadAccountByEmailRepositoryResult
+  LoadAccountByEmailRepositoryResult,
+  SaveFacebookAccountRepositoryDto
 } from '@/data/contracts/repositories/account'
 import { PrismaHelper } from '@/infra/prisma/helpers'
 
@@ -17,6 +18,11 @@ class PrismaAccountRepository implements LoadAccountByEmailRepository {
         name: account.name ?? undefined
       }
     }
+  }
+
+  async saveWithFacebook (dto: SaveFacebookAccountRepositoryDto): Promise<void> {
+    const prisma = await PrismaHelper.connect()
+    await prisma.account.create({ data: { email: dto.email, name: dto.name, facebookId: dto.facebookId } })
   }
 }
 
@@ -64,6 +70,23 @@ describe('PrismaAccount Repository', () => {
       const account = await sut.loadByEmail({ email: 'any_email' })
 
       expect(account).toBeUndefined()
+    })
+  })
+
+  describe('loadByEmail', () => {
+    it('should create an account if id is undefined', async () => {
+      const { sut, prisma } = await makeSut()
+
+      await sut.saveWithFacebook({
+        email: 'any_email',
+        name: 'any_name',
+        facebookId: 'any_fb_id'
+      })
+      const account = await prisma.account.findFirst({ where: { email: 'any_email' } })
+
+      expect(account?.id).toBeTruthy()
+      expect(account?.name).toBe('any_name')
+      expect(account?.facebookId).toBe('any_fb_id')
     })
   })
 })

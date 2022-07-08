@@ -6,7 +6,10 @@ export const PrismaHelper = {
   client: null as PrismaHelperClient,
 
   async connect (): Promise<PrismaClient> {
-    this.client = new PrismaClient()
+    if (this.client === null) {
+      this.client = new PrismaClient()
+      return this.client
+    }
     return this.client
   },
 
