@@ -1,8 +1,8 @@
-import { TokenGeneratorDto, TokenGeneratorResult } from '@/data/contracts/crypto'
+import { TokenGenerator, TokenGeneratorDto, TokenGeneratorResult } from '@/data/contracts/crypto'
 
 import { sign } from 'jsonwebtoken'
 
-export class JwtTokenGenerator {
+export class JwtTokenGenerator implements TokenGenerator {
   constructor (
     private readonly secret: string
   ) {}
