@@ -1,4 +1,4 @@
 
-export interface Validation<T = any> {
+export interface Validator<T = any> {
   validate: (value: T) => Error | undefined
 }
