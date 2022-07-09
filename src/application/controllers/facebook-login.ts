@@ -16,10 +16,11 @@ export class FacebookLoginController {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
     try {
-      if (httpRequest.token === '' || httpRequest.token === null || httpRequest.token === undefined) {
-        return badRequest(new RequiredFieldError('token'))
+      const error = this.validate(httpRequest)
+      if (error !== undefined) {
+        return badRequest(error)
       }
-      const token = await this.facebookAuth.perform({ token: httpRequest.token })
+      const token = await this.facebookAuth.perform({ token: httpRequest.token as string })
       if (token instanceof AccessToken) {
         return ok({ accessToken: token.value })
       } else {
@@ -27,6 +28,12 @@ export class FacebookLoginController {
       }
     } catch (error: any) {
       return serverError(error)
+    }
+  }
+
+  private validate (httpRequest: HttpRequest): Error | undefined {
+    if (httpRequest.token === '' || httpRequest.token === null || httpRequest.token === undefined) {
+      return new RequiredFieldError('token')
     }
   }
 }
