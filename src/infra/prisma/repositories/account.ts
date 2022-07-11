@@ -31,15 +31,12 @@ export class PrismaAccountRepository implements LoadAccountByEmailRepository {
   }
 
   async saveWithFacebook (dto: SaveWithFacebookDto): Promise<SaveWithFacebookResult> {
-    const id = dto.id === undefined ? 0 : Number.parseInt(dto.id)
-    const account = await this.prisma.account.upsert(
-      {
-        where: { id },
-        create: { email: dto.email, name: dto.name, facebookId: dto.facebookId },
-        update: { name: dto.name, facebookId: dto.facebookId }
-      })
-    return {
-      id: account.id.toString()
-    }
+    const accountRepo = this.prisma.account
+    const account = await accountRepo.upsert({
+      where: { id: parseInt(dto.id ?? '0') },
+      create: { email: dto.email, name: dto.name, facebookId: dto.facebookId },
+      update: { name: dto.name, facebookId: dto.facebookId }
+    })
+    return { id: account.id.toString() }
   }
 }
