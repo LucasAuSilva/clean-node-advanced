@@ -2,12 +2,10 @@ import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuth } from '@/domain/features/facebook-authentication'
 import { AccessToken } from '@/domain/models/authentication'
 import { FacebookLoginController } from '@/application/controllers'
-import { RequiredStringValidator, ValidationComposite } from '@/application/validation'
-import { ServerError, UnauthorizedError } from '@/application/errors'
+import { RequiredStringValidator } from '@/application/validation'
+import { UnauthorizedError } from '@/application/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
-
-jest.mock('@/application/validation/composite')
 
 type SutTypes = {
   sut: FacebookLoginController
@@ -27,21 +25,12 @@ const makeSut = (): SutTypes => {
 describe('FacebookLogin Controller', () => {
   const token = { token: 'any_token' }
 
-  it('should return 400 if validation fails', async () => {
-    const error = new Error('validation_error')
-    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
-      validate: jest.fn().mockReturnValue(error)
-    }))
-    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy)
+  it('should build Validators correctly', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle(token)
-    expect(ValidationComposite).toHaveBeenCalledWith([
+    const validators = sut.buildValidators(token)
+    expect(validators).toEqual([
       new RequiredStringValidator('any_token', 'token')
     ])
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: error
-    })
   })
 
   it('should call FacebookAuth with correct values', async () => {
@@ -69,17 +58,6 @@ describe('FacebookLogin Controller', () => {
       data: {
         accessToken: 'any_value'
       }
-    })
-  })
-
-  it('should return 500 if authentication throws', async () => {
-    const error = new Error('infra_error')
-    const { sut, facebookAuth } = makeSut()
-    facebookAuth.perform.mockRejectedValueOnce(error)
-    const httpResponse = await sut.handle(token)
-    expect(httpResponse).toEqual({
-      statusCode: 500,
-      data: new ServerError(error)
     })
   })
 })
