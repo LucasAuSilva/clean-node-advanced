@@ -9,8 +9,9 @@ class ExpressRouter {
     private readonly controller: Controller
   ) {}
 
-  async adapt (req: Request, _res: Response): Promise<void> {
-    await this.controller.handle({ ...req.body })
+  async adapt (req: Request, res: Response): Promise<void> {
+    const httpResponse = await this.controller.handle({ ...req.body })
+    res.status(200).json(httpResponse.data)
   }
 }
 
@@ -21,6 +22,12 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const controller = mock<Controller>()
+  controller.handle.mockResolvedValue({
+    statusCode: 200,
+    data: {
+      valid: 'valid_data'
+    }
+  })
   const sut = new ExpressRouter(controller)
   return {
     sut,
@@ -29,8 +36,13 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Express Router', () => {
-  let req = getMockReq({ body: { any: 'any' } })
-  const res = getMockRes().res
+  let req: Request
+  let res: Response
+
+  beforeEach(() => {
+    req = getMockReq({ body: { any: 'any' } })
+    res = getMockRes().res
+  })
 
   it('should call handle with correct request', async () => {
     const { sut, controller } = makeSut()
@@ -38,6 +50,7 @@ describe('Express Router', () => {
     await sut.adapt(req, res)
 
     expect(controller.handle).toHaveBeenCalledWith({ any: 'any' })
+    expect(controller.handle).toHaveBeenCalledTimes(1)
   })
 
   it('should call handle with empty request', async () => {
@@ -47,5 +60,16 @@ describe('Express Router', () => {
     await sut.adapt(req, res)
 
     expect(controller.handle).toHaveBeenCalledWith({})
+  })
+
+  it('should respond with 200 and valid data', async () => {
+    const { sut } = makeSut()
+
+    await sut.adapt(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({ valid: 'valid_data' })
+    expect(res.json).toHaveBeenCalledTimes(1)
   })
 })
