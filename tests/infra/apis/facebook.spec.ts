@@ -45,7 +45,7 @@ describe('Facebook API', () => {
     await sut.loadUser({ token })
 
     expect(httpClient.get).toHaveBeenCalledWith({
-      url: 'https://graph.facebook.com/oauth/access_token',
+      url: 'https://graph.facebook.com/debug_token',
       params: {
         access_token: 'any_app_token',
         input_token: 'any_client_token'
@@ -58,7 +58,7 @@ describe('Facebook API', () => {
     await sut.loadUser({ token })
 
     expect(httpClient.get).toHaveBeenCalledWith({
-      url: 'https://graph.facebook.com/oauth/any_user_id',
+      url: 'https://graph.facebook.com/any_user_id',
       params: {
         fields: 'id,name,email',
         access_token: 'any_client_token'
@@ -75,5 +75,13 @@ describe('Facebook API', () => {
       name: 'any_fb_name',
       email: 'any_fb_email'
     })
+  })
+
+  it('should return undefined if HttpGetClient throws', async () => {
+    const { sut, httpClient } = makeSut()
+    httpClient.get.mockReset().mockRejectedValueOnce(new Error('http_error'))
+    const fbUser = await sut.loadUser({ token })
+
+    expect(fbUser).toBe(undefined)
   })
 })
