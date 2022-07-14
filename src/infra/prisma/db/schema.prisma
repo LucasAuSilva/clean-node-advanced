@@ -1,0 +1,23 @@
+//******** AUTO GENERATED FILE, DO NOT EDIT.  *********
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model Account {
+  id         Int    @id @default(autoincrement())
+  name       String? @map("nome")
+  email      String
+  facebookId String? @map("id_facebook")
+
+  @@map("usuarios")
+}
