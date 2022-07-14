@@ -17,6 +17,9 @@ type DebugToken = {
   }
 }
 
+type ApiDto = LoadFacebookUserApiDto
+type ApiResult = LoadFacebookUserApiResult
+
 export class FacebookApi implements LoadFacebookUserApi {
   private readonly baseUrl = 'https://graph.facebook.com'
   constructor (
@@ -25,9 +28,9 @@ export class FacebookApi implements LoadFacebookUserApi {
     private readonly clientSecret: string
   ) {}
 
-  async loadUser (dto: LoadFacebookUserApiDto): Promise<LoadFacebookUserApiResult> {
+  async loadUser ({ token }: ApiDto): Promise<ApiResult> {
     try {
-      const userInfo = await this.getUserInfo(dto.token)
+      const userInfo = await this.getUserInfo(token)
       return {
         facebookId: userInfo.id,
         name: userInfo.name,

@@ -20,8 +20,8 @@ export class PrismaAccountRepository implements LoadAccountByEmailRepository {
     this.prisma = new PrismaClient()
   }
 
-  async loadByEmail (dto: LoadByEmailDto): Promise<LoadByEmailResult> {
-    const account = await this.prisma.account.findFirst({ where: { email: dto.email } })
+  async loadByEmail ({ email }: LoadByEmailDto): Promise<LoadByEmailResult> {
+    const account = await this.prisma.account.findFirst({ where: { email } })
     if (account !== null) {
       return {
         id: account.id.toString(),
@@ -30,12 +30,12 @@ export class PrismaAccountRepository implements LoadAccountByEmailRepository {
     }
   }
 
-  async saveWithFacebook (dto: SaveWithFacebookDto): Promise<SaveWithFacebookResult> {
+  async saveWithFacebook ({ id, name, email, facebookId }: SaveWithFacebookDto): Promise<SaveWithFacebookResult> {
     const accountRepo = this.prisma.account
     const account = await accountRepo.upsert({
-      where: { id: parseInt(dto.id ?? '0') },
-      create: { email: dto.email, name: dto.name, facebookId: dto.facebookId },
-      update: { name: dto.name, facebookId: dto.facebookId }
+      where: { id: parseInt(id ?? '0') },
+      create: { email, name, facebookId },
+      update: { name, facebookId }
     })
     return { id: account.id.toString() }
   }

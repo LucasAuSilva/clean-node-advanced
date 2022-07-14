@@ -2,13 +2,16 @@ import { TokenGenerator, TokenGeneratorDto, TokenGeneratorResult } from '@/data/
 
 import { sign } from 'jsonwebtoken'
 
+type TokenDto = TokenGeneratorDto
+type TokenResult = TokenGeneratorResult
+
 export class JwtTokenGenerator implements TokenGenerator {
   constructor (
     private readonly secret: string
   ) {}
 
-  async generateToken (dto: TokenGeneratorDto): Promise<TokenGeneratorResult> {
-    const expirationInSeconds = dto.expirationInMs / 1000
-    return sign({ key: dto.key }, this.secret, { expiresIn: expirationInSeconds })
+  async generateToken ({ key, expirationInMs }: TokenDto): Promise<TokenResult> {
+    const expirationInSeconds = expirationInMs / 1000
+    return sign({ key }, this.secret, { expiresIn: expirationInSeconds })
   }
 }
