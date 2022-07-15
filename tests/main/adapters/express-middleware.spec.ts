@@ -12,8 +12,9 @@ const adaptExpressMiddleware: Adapter = (middleware) => async (req, res, next) =
     const entries = Object.entries(data).filter(entry => entry[1])
     req.locals = { ...req.locals, ...Object.fromEntries(entries) }
     next()
+  } else {
+    res.status(statusCode).json(data)
   }
-  res.status(statusCode).json(data)
 }
 
 interface Middleware {
@@ -90,5 +91,13 @@ describe('Express Middleware', () => {
 
     expect(req.locals).toEqual({ prop: 'any_value' })
     expect(next).toHaveBeenCalledTimes(1)
+  })
+
+  it('should not call res if middleware succeeds', async () => {
+    const { sut } = makeSut()
+    await sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledTimes(0)
+    expect(res.json).toHaveBeenCalledTimes(0)
   })
 })
