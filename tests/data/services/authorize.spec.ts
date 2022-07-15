@@ -1,23 +1,8 @@
+import { AuthorizeService } from '@/data/services/authorize'
+import { TokenValidator } from '@/data/contracts/crypto'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 jest.mock('@/domain/models/account/facebook-account')
-
-class AuthorizeService {
-  constructor (
-    private readonly crypto: TokenValidator
-  ) {}
-
-  async auth (dto: AuthorizeDto): Promise<AuthorizeResult> {
-    return this.crypto.validate(dto.token)
-  }
-}
-
-type AuthorizeDto = { token: string }
-type AuthorizeResult = string
-
-interface TokenValidator {
-  validate: (token: string) => Promise<string>
-}
 
 type SutTypes = {
   sut: AuthorizeService
