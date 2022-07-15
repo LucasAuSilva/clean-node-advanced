@@ -7,6 +7,6 @@ export class AuthorizeService implements Authorize {
   ) {}
 
   async auth (dto: AuthorizeDto): Promise<AuthorizeResult> {
-    return this.crypto.validate(dto.token)
+    return this.crypto.validateToken(dto.token)
   }
 }

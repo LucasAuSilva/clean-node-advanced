@@ -11,7 +11,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const crypto = mock<TokenValidator>()
-  crypto.validate.mockResolvedValue('any_id')
+  crypto.validateToken.mockResolvedValue('any_id')
   const sut = new AuthorizeService(crypto)
   return {
     sut,
@@ -25,8 +25,8 @@ describe('Authorize Service', () => {
   it('should call TokenValidator with correct values', async () => {
     const { sut, crypto } = makeSut()
     await sut.auth({ token })
-    expect(crypto.validate).toHaveBeenCalledWith(token)
-    expect(crypto.validate).toHaveBeenCalledTimes(1)
+    expect(crypto.validateToken).toHaveBeenCalledWith(token)
+    expect(crypto.validateToken).toHaveBeenCalledTimes(1)
   })
 
   it('should return the correct accessToken', async () => {

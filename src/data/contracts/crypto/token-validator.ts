@@ -1,3 +1,3 @@
 export interface TokenValidator {
-  validate: (token: string) => Promise<string>
+  validateToken: (token: string) => Promise<string>
 }
