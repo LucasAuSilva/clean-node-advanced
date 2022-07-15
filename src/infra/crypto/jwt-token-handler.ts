@@ -1,10 +1,10 @@
-import { TokenGenerator, TokenGeneratorDto } from '@/data/contracts/crypto'
+import { TokenGenerator, TokenGeneratorDto, TokenValidator } from '@/data/contracts/crypto'
 
-import { sign, verify } from 'jsonwebtoken'
+import { JwtPayload, sign, verify } from 'jsonwebtoken'
 
 type TokenDto = TokenGeneratorDto
 
-export class JwtTokenHandler implements TokenGenerator {
+export class JwtTokenHandler implements TokenGenerator, TokenValidator {
   constructor (
     private readonly secret: string
   ) {}
@@ -14,7 +14,8 @@ export class JwtTokenHandler implements TokenGenerator {
     return sign({ key }, this.secret, { expiresIn: expirationInSeconds })
   }
 
-  async validateToken (token: string): Promise<void> {
-    verify(token, this.secret)
+  async validateToken (token: string): Promise<string> {
+    const payload = verify(token, this.secret) as JwtPayload
+    return payload.key
   }
 }

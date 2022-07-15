@@ -11,6 +11,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const fakeJwt = jwt as jest.Mocked<typeof jwt>
   fakeJwt.sign.mockImplementation(() => 'any_token')
+  fakeJwt.verify.mockImplementation(() => ({ key: 'any_key' }))
   const sut = new JwtTokenHandler('any_secret')
   return {
     sut,
@@ -21,9 +22,9 @@ const makeSut = (): SutTypes => {
 describe('JwtToken Handler', () => {
   const token = 'any_token'
   const secret = 'any_secret'
+  const key = 'any_key'
 
   describe('generateToken()', () => {
-    const key = 'any_key'
     const expirationInMs = 1000
 
     it('should call sign with correct values', async () => {
@@ -65,6 +66,13 @@ describe('JwtToken Handler', () => {
 
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
       expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
+    })
+
+    it('should return the key used to sign', async () => {
+      const { sut } = makeSut()
+      const generatedKey = await sut.validateToken(token)
+
+      expect(generatedKey).toBe(key)
     })
   })
 })
