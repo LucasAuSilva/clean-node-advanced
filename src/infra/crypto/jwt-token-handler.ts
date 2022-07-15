@@ -5,7 +5,7 @@ import { sign } from 'jsonwebtoken'
 type TokenDto = TokenGeneratorDto
 type TokenResult = TokenGeneratorResult
 
-export class JwtTokenGenerator implements TokenGenerator {
+export class JwtTokenHandler implements TokenGenerator {
   constructor (
     private readonly secret: string
   ) {}
