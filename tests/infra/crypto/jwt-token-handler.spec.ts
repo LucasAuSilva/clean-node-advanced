@@ -19,6 +19,9 @@ const makeSut = (): SutTypes => {
 }
 
 describe('JwtToken Handler', () => {
+  const token = 'any_token'
+  const secret = 'any_secret'
+
   describe('generateToken()', () => {
     const key = 'any_key'
     const expirationInMs = 1000
@@ -30,7 +33,7 @@ describe('JwtToken Handler', () => {
         expirationInMs
       })
 
-      expect(fakeJwt.sign).toHaveBeenCalledWith({ key }, 'any_secret', { expiresIn: 1 })
+      expect(fakeJwt.sign).toHaveBeenCalledWith({ key }, secret, { expiresIn: 1 })
       expect(fakeJwt.sign).toHaveBeenCalledTimes(1)
     })
 
@@ -41,7 +44,7 @@ describe('JwtToken Handler', () => {
         expirationInMs
       })
 
-      expect(generatedToken).toBe('any_token')
+      expect(generatedToken).toBe(token)
     })
 
     it('should rethrow if get throws', async () => {
@@ -53,6 +56,15 @@ describe('JwtToken Handler', () => {
       })
 
       await expect(promise).rejects.toThrow(new Error('crypto_error'))
+    })
+  })
+  describe('validateToken()', () => {
+    it('should call verify with correct values', async () => {
+      const { sut, fakeJwt } = makeSut()
+      await sut.validateToken(token)
+
+      expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
+      expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
     })
   })
 })

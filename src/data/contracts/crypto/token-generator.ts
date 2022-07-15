@@ -1,10 +1,8 @@
 export interface TokenGenerator {
-  generateToken: (dto: TokenGeneratorDto) => Promise<TokenGeneratorResult>
+  generateToken: (dto: TokenGeneratorDto) => Promise<string>
 }
 
 export type TokenGeneratorDto = {
   key: string
   expirationInMs: number
 }
-
-export type TokenGeneratorResult = string
