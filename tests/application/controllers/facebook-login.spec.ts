@@ -1,6 +1,5 @@
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuth } from '@/domain/features/facebook-authentication'
-import { AccessToken } from '@/domain/models/authentication'
 import { FacebookLoginController } from '@/application/controllers'
 import { RequiredStringValidator } from '@/application/validation'
 import { UnauthorizedError } from '@/application/errors'
@@ -14,7 +13,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const facebookAuth = mock<FacebookAuth>()
-  facebookAuth.perform.mockResolvedValue(new AccessToken('any_value'))
+  facebookAuth.perform.mockResolvedValue({ accessToken: 'any_value' })
   const sut = new FacebookLoginController(facebookAuth)
   return {
     sut,
@@ -42,7 +41,7 @@ describe('FacebookLogin Controller', () => {
 
   it('should return 401 if authentication fails', async () => {
     const { sut, facebookAuth } = makeSut()
-    facebookAuth.perform.mockResolvedValueOnce(new AuthenticationError())
+    facebookAuth.perform.mockRejectedValueOnce(new AuthenticationError())
     const httpResponse = await sut.handle(token)
     expect(httpResponse).toEqual({
       statusCode: 401,
