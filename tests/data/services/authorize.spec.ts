@@ -7,15 +7,16 @@ class AuthorizeService {
     private readonly crypto: TokenValidator
   ) {}
 
-  async auth (dto: AuthorizeDto): Promise<void> {
-    await this.crypto.validate(dto.token)
+  async auth (dto: AuthorizeDto): Promise<AuthorizeResult> {
+    return this.crypto.validate(dto.token)
   }
 }
 
 type AuthorizeDto = { token: string }
+type AuthorizeResult = string
 
 interface TokenValidator {
-  validate: (token: string) => Promise<void>
+  validate: (token: string) => Promise<string>
 }
 
 type SutTypes = {
@@ -25,7 +26,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const crypto = mock<TokenValidator>()
-  crypto.validate.mockResolvedValue()
+  crypto.validate.mockResolvedValue('any_id')
   const sut = new AuthorizeService(crypto)
   return {
     sut,
@@ -41,5 +42,12 @@ describe('Authorize Service', () => {
     await sut.auth({ token })
     expect(crypto.validate).toHaveBeenCalledWith(token)
     expect(crypto.validate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return the correct accessToken', async () => {
+    const { sut } = makeSut()
+    const userId = await sut.auth({ token })
+
+    expect(userId).toBe('any_id')
   })
 })
