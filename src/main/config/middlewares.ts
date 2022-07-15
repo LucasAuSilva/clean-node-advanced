@@ -8,4 +8,8 @@ export const setupMiddlewares = (app: Express): void => {
     res.type('json')
     next()
   })
+  app.use((_req, res, next) => {
+    res.removeHeader('X-Powered-By')
+    next()
+  })
 }
