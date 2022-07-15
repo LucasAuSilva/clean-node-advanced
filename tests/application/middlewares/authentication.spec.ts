@@ -1,22 +1,24 @@
 import { Authorize } from '@/domain/features'
 import { ForbiddenError } from '@/application/errors'
-import { HttpResponse, forbidden } from '@/application/helpers'
+import { HttpResponse, forbidden, ok } from '@/application/helpers'
 import { RequiredStringValidator } from '@/application/validation'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 
 type HttpRequest = { authorization: string }
+type Model = Error | { userId: string }
 
 class AuthenticationMiddleware {
   constructor (
     private readonly authorize: Authorize
   ) {}
 
-  async handle ({ authorization }: HttpRequest): Promise<HttpResponse<Error> | undefined> {
+  async handle ({ authorization }: HttpRequest): Promise<HttpResponse<Model>> {
     const error = new RequiredStringValidator(authorization, 'authorization').validate()
     if (error !== undefined) return forbidden()
     try {
-      await this.authorize.auth({ token: authorization })
+      const userId = await this.authorize.auth({ token: authorization })
+      return ok({ userId })
     } catch {
       return forbidden()
     }
@@ -30,6 +32,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const authorize = mock<Authorize>()
+  authorize.auth.mockResolvedValue('any_user_id')
   const sut = new AuthenticationMiddleware(authorize)
   return {
     sut,
@@ -72,7 +75,16 @@ describe('Authentication Middleware', () => {
     })
   })
 
-  it('should return 403 if authorization throws', async () => {
+  it('should call authorize with correct values', async () => {
+    const { sut, authorize } = makeSut()
+
+    await sut.handle({ authorization })
+
+    expect(authorize.auth).toHaveBeenCalledWith({ token: authorization })
+    expect(authorize.auth).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 403 if authorize throws', async () => {
     const { sut, authorize } = makeSut()
     authorize.auth.mockRejectedValueOnce(new Error('any_error'))
 
@@ -84,12 +96,14 @@ describe('Authentication Middleware', () => {
     })
   })
 
-  it('should call authorize with correct values', async () => {
-    const { sut, authorize } = makeSut()
+  it('should return 200 with userId on success', async () => {
+    const { sut } = makeSut()
 
-    await sut.handle({ authorization })
+    const httpResponse = await sut.handle({ authorization })
 
-    expect(authorize.auth).toHaveBeenCalledWith({ token: authorization })
-    expect(authorize.auth).toHaveBeenCalledTimes(1)
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { userId: 'any_user_id' }
+    })
   })
 })
