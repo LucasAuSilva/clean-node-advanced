@@ -1,5 +1,5 @@
 export interface TokenGenerator {
-  generateToken: (dto: TokenGeneratorDto) => Promise<string>
+  generateToken: (key: string, expirationInMs: number) => Promise<string>
 }
 
 export type TokenGeneratorDto = {

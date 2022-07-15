@@ -80,10 +80,7 @@ describe('Facebook Authentication Service', () => {
 
     await sut.perform({ token })
 
-    expect(crypto.generateToken).toHaveBeenCalledWith({
-      key: 'any_account_id',
-      expirationInMs: AccessToken.expirationInMs
-    })
+    expect(crypto.generateToken).toHaveBeenCalledWith('any_account_id', AccessToken.expirationInMs)
     expect(crypto.generateToken).toHaveBeenCalledTimes(1)
   })
 

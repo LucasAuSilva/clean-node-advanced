@@ -29,10 +29,7 @@ describe('JwtToken Handler', () => {
 
     it('should call sign with correct values', async () => {
       const { sut, fakeJwt } = makeSut()
-      await sut.generateToken({
-        key,
-        expirationInMs
-      })
+      await sut.generateToken(key, expirationInMs)
 
       expect(fakeJwt.sign).toHaveBeenCalledWith({ key }, secret, { expiresIn: 1 })
       expect(fakeJwt.sign).toHaveBeenCalledTimes(1)
@@ -40,10 +37,7 @@ describe('JwtToken Handler', () => {
 
     it('should return a token', async () => {
       const { sut } = makeSut()
-      const generatedToken = await sut.generateToken({
-        key,
-        expirationInMs
-      })
+      const generatedToken = await sut.generateToken(key, expirationInMs)
 
       expect(generatedToken).toBe(token)
     })
@@ -51,10 +45,7 @@ describe('JwtToken Handler', () => {
     it('should rethrow if get throws', async () => {
       const { sut, fakeJwt } = makeSut()
       fakeJwt.sign.mockImplementationOnce(() => { throw new Error('crypto_error') })
-      const promise = sut.generateToken({
-        key,
-        expirationInMs
-      })
+      const promise = sut.generateToken(key, expirationInMs)
 
       await expect(promise).rejects.toThrow(new Error('crypto_error'))
     })
