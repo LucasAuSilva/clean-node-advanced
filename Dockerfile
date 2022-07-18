@@ -7,7 +7,6 @@ ENV PORT=${PORT_BUILD}
 
 EXPOSE $PORT
 
-COPY ./env .
 COPY ./package.json .
 COPY ./tsconfig.json .
 COPY ./tsconfig.build.json .
