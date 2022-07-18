@@ -1,19 +1,16 @@
 import {
-  LoadAccountByEmailRepository,
-  LoadAccountByEmailRepositoryDto,
-  LoadAccountByEmailRepositoryResult,
-  SaveFacebookAccountRepositoryDto,
-  SaveFacebookAccountRepositoryResult
+  LoadAccountByEmail, LoadAccountByEmailDto, LoadAccountByEmailResult,
+  SaveFacebookAccount, SaveFacebookAccountDto, SaveFacebookAccountResult
 } from '@/data/contracts/repositories/account'
 
 import { PrismaClient } from '@prisma/client'
 
-type LoadByEmailDto = LoadAccountByEmailRepositoryDto
-type LoadByEmailResult = LoadAccountByEmailRepositoryResult
-type SaveWithFacebookDto = SaveFacebookAccountRepositoryDto
-type SaveWithFacebookResult = SaveFacebookAccountRepositoryResult
+type LoadByEmailDto = LoadAccountByEmailDto
+type LoadByEmailResult = LoadAccountByEmailResult
+type SaveWithFacebookDto = SaveFacebookAccountDto
+type SaveWithFacebookResult = SaveFacebookAccountResult
 
-export class PrismaAccountRepository implements LoadAccountByEmailRepository {
+export class PrismaAccountRepository implements LoadAccountByEmail, SaveFacebookAccount {
   private readonly prisma: PrismaClient
 
   constructor () {

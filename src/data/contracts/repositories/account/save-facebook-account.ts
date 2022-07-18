@@ -1,14 +1,14 @@
-export interface SaveFacebookAccountRepository {
-  saveWithFacebook: (dto: SaveFacebookAccountRepositoryDto) => Promise<SaveFacebookAccountRepositoryResult>
+export interface SaveFacebookAccount {
+  saveWithFacebook: (dto: SaveFacebookAccountDto) => Promise<SaveFacebookAccountResult>
 }
 
-export type SaveFacebookAccountRepositoryDto = {
+export type SaveFacebookAccountDto = {
   id?: string
   email: string
   name: string
   facebookId: string
 }
 
-export type SaveFacebookAccountRepositoryResult = {
+export type SaveFacebookAccountResult = {
   id: string
 }
