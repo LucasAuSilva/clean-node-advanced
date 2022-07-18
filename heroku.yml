@@ -3,9 +3,7 @@ setup:
   - plan: heroku-postgresql
     as: DATABASE
   config:
-    env_file: .env
+    DATABASE_URL: $DATABASE_URL
 build:
-  config:
-    env_file: .env
   docker:
     web: Dockerfile
