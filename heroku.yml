@@ -3,7 +3,11 @@ setup:
   - plan: heroku-postgresql
     as: DATABASE
   config:
-    DATABASE_URL: $DATABASE_URL
+    env_file: .env
 build:
   docker:
     web: Dockerfile
+release:
+  image: web
+  command:
+    - npx run prisma migrate deploy
