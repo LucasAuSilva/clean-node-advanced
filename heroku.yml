@@ -1,11 +1,9 @@
-setup:
-  addons:
-  - plan: heroku-postgresql
-    as: DATABASE
-  config:
-    env_file: .env
 build:
   docker:
     web: Dockerfile
 run:
   web: npm start
+release:
+  image: web
+  command:
+    - npm run migrate:prod
