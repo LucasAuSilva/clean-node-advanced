@@ -36,7 +36,7 @@
     "schema:test": "npx prisma-merge -b tests/infra/prisma/db/test.base.prisma -s src/**/schemas/* -o tests/infra/prisma/db/schema.prisma",
     "migrate:test": "npx prisma migrate dev --schema tests/infra/prisma/db/schema.prisma",
     "env:test": "rimraf tests/infra/prisma/test-db && npm run schema:test && npm run migrate:test",
-    "prepare": "husky install"
+    "husky:prepare": "husky install"
   },
   "dependencies": {
     "@prisma/client": "^4.0.0",
@@ -48,7 +48,9 @@
     "module-alias": "^2.2.2",
     "prisma-merge": "^0.2.0",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.4",
+    "@types/node": "^18.0.3"
   },
   "devDependencies": {
     "@jest-mock/express": "^2.0.1",
@@ -57,7 +59,6 @@
     "@types/jest": "^28.1.4",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/module-alias": "^2.0.1",
-    "@types/node": "^18.0.3",
     "@types/supertest": "^2.0.12",
     "eslint": "^8.19.0",
     "eslint-config-standard-with-typescript": "^22.0.0",
@@ -70,8 +71,7 @@
     "prisma": "^4.0.0",
     "supertest": "^6.2.4",
     "ts-jest": "^28.0.5",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^4.7.4"
+    "ts-node-dev": "^2.0.0"
   },
   "engines": {
     "node": "16.x"
