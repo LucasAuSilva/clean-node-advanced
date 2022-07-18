@@ -12,4 +12,4 @@ run:
 release:
   image: web
   command:
-    - npx prisma migrate deploy
+    - npm run migrate:prod
