@@ -7,9 +7,5 @@ setup:
 build:
   docker:
     web: Dockerfile
-release:
-  image: web
-  command:
-    - npm run migrate:prod
 run:
   web: npm start
