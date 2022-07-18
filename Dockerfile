@@ -1,4 +1,5 @@
 ARG PORT_BUILD=5050
+ARG DATABASE_URL
 
 FROM node:lts-alpine
 WORKDIR /app/clean-node-advanced
