@@ -6,4 +6,4 @@ run:
 release:
   image: web
   command:
-    - npm run migrate:prod
+    - npx prisma migrate deploy --schema=./src/infra/prisma/db/schema.prisma
