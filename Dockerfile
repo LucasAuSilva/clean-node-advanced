@@ -9,4 +9,4 @@ COPY ./src ./src
 RUN npm install --omit=dev
 RUN npm run build
 
-ENTRYPOINT npm start
+CMD "npm start"

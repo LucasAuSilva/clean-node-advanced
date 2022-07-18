@@ -20,7 +20,7 @@
   "license": "GPL-3.0-or-later",
   "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config dist/main",
+    "start": "node dist/main",
     "build": "rimraf dist && npx tsc -p tsconfig.build.json",
     "run:dev": "npm run build && npm run start",
     "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config --inspect=0.0.0.0:9229 src/main",
