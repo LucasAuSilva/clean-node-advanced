@@ -59,7 +59,7 @@ describe('Express Middleware', () => {
     const { sut, middleware } = makeSut()
     middleware.handle.mockResolvedValueOnce({
       statusCode: 500,
-      data: { error: 'any_error' }
+      data: new Error('any_error')
     })
     await sut(req, res, next)
 
