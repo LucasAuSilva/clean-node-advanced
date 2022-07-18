@@ -3,8 +3,4 @@ build:
     web: Dockerfile
 run:
   web: npm start
-release:
-  image: web
-  command:
-    - npx prisma generate
-    - npx prisma migrate deploy --schema=./src/infra/prisma/db/schema.prisma
+release: npx prisma migrate deploy
