@@ -10,4 +10,4 @@ build:
 release:
   image: web
   command:
-    - npx run prisma migrate deploy
+    - npx prisma migrate deploy
