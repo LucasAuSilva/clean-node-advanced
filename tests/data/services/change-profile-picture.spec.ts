@@ -1,7 +1,7 @@
 import { ChangeProfilePicture } from '@/data/services'
 import { UploadFile } from '@/data/contracts/file-storage'
 import { UUIDGenerator } from '@/data/contracts/crypto'
-import { SaveProfilePicture } from '@/data/contracts/repositories/profile'
+import { LoadProfileById, SaveProfilePicture } from '@/data/contracts/repositories/profile'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 
@@ -9,11 +9,11 @@ type SutTypes = {
   sut: ChangeProfilePicture
   fileStorage: MockProxy<UploadFile>
   uniqueId: MockProxy<UUIDGenerator>
-  profileRepo: MockProxy<SaveProfilePicture>
+  profileRepo: MockProxy<SaveProfilePicture & LoadProfileById>
 }
 
 const makeSut = (): SutTypes => {
-  const profileRepo = mock<SaveProfilePicture>()
+  const profileRepo = mock<SaveProfilePicture & LoadProfileById>()
   const uniqueId = mock<UUIDGenerator>()
   uniqueId.generate.mockReturnValue('any_unique_id')
   const fileStorage = mock<UploadFile>()
@@ -56,5 +56,12 @@ describe('Change Profile Picture', () => {
     await sut.perform({ id: 'any_id', file: undefined })
     expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined)
     expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call LoadProfileById with correct values', async () => {
+    const { sut, profileRepo } = makeSut()
+    await sut.perform({ id: 'any_id', file: undefined })
+    expect(profileRepo.loadById).toHaveBeenCalledWith('any_id')
+    expect(profileRepo.loadById).toHaveBeenCalledTimes(1)
   })
 })
