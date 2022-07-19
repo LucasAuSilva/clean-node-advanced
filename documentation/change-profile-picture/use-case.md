@@ -14,7 +14,7 @@
 ## Alternative flow 1: User remove the picture
 1. [x] If the system doesn't receive a picture ignore steps 1 and 2
 3. [x] Clean url picture from data of the user
-4. [ ] Update the field user initials with the first and last letter of the name
+4. [x] Update the field user initials with the first and last letter of the name
 
 ## Alternative flow 1.1: User doesn't have last name
 4. [ ] Update the field initials with the first two letters of the name
