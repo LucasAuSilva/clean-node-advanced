@@ -1,4 +1,4 @@
-import { mock } from 'jest-mock-extended'
+import { mock, MockProxy } from 'jest-mock-extended'
 
 class ChangeProfilePicture {
   constructor (
@@ -22,15 +22,30 @@ interface UUIDGenerator {
   generate: (key: string) => string
 }
 
+type SutTypes = {
+  sut: ChangeProfilePicture
+  fileStorage: MockProxy<UploadFile>
+  uniqueId: MockProxy<UUIDGenerator>
+}
+
+const makeSut = (): SutTypes => {
+  const uniqueId = mock<UUIDGenerator>()
+  uniqueId.generate.mockReturnValueOnce('any_unique_id')
+  const fileStorage = mock<UploadFile>()
+  const sut = new ChangeProfilePicture(fileStorage, uniqueId)
+  return {
+    sut,
+    fileStorage,
+    uniqueId
+  }
+}
+
 describe('Change Profile Picture', () => {
   const file = Buffer.from('any_buffer')
   const uuid = 'any_unique_id'
 
   it('should call UploadFile with correct values', async () => {
-    const fileStorage = mock<UploadFile>()
-    const uniqueId = mock<UUIDGenerator>()
-    uniqueId.generate.mockReturnValueOnce(uuid)
-    const sut = new ChangeProfilePicture(fileStorage, uniqueId)
+    const { sut, fileStorage } = makeSut()
     await sut.perform({ id: 'any_id', file })
     expect(fileStorage.upload).toHaveBeenCalledWith(file, uuid)
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
