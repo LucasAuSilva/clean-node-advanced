@@ -1,12 +1,8 @@
+import { UUIDHandler } from '@/infra/crypto'
+
 import { v4 } from 'uuid'
 
 jest.mock('uuid')
-
-class UUIDHandler {
-  generate (key: string): string {
-    return `${key}_${v4()}`
-  }
-}
 
 const makeSut = (): UUIDHandler => {
   jest.mocked(v4).mockReturnValue('any_uuid')
