@@ -12,7 +12,7 @@
 5. [ ] Return the picture URL and the user initials
 
 ## Alternative flow 1: User remove the picture
-1. [ ] If the system doesn't receive a picture ignore steps 1 and 2
+1. [x] If the system doesn't receive a picture ignore steps 1 and 2
 3. [ ] Clean url picture from data of the user
 4. [ ] Update the field user initials with the first and last letter of the name
 

@@ -8,9 +8,11 @@ export class ChangeProfilePicture {
   ) {}
 
   async perform ({ id, file }: ChangeProfilePictureDto): Promise<void> {
-    const uuid = this.uniqueId.generate(id)
-    await this.fileStorage.upload(file, uuid)
+    if (file !== undefined) {
+      const uuid = this.uniqueId.generate(id)
+      await this.fileStorage.upload(file, uuid)
+    }
   }
 }
 
-type ChangeProfilePictureDto = { id: string, file: Buffer }
+type ChangeProfilePictureDto = { id: string, file?: Buffer }
