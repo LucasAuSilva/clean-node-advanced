@@ -11,13 +11,18 @@ export class ChangeProfilePicture {
 
   async perform ({ id, file }: ChangeProfilePictureDto): Promise<void> {
     let pictureUrl: string | undefined
+    let initials: string | undefined
     if (file !== undefined) {
       const uuid = this.uniqueId.generate(id)
       pictureUrl = await this.fileStorage.upload(file, uuid)
     } else {
-      await this.profileRepo.loadById(id)
+      const name = await this.profileRepo.loadById(id)
+      if (name !== undefined) {
+        const firstLetters = name.match(/\b(.)/g) ?? []
+        initials = `${firstLetters.shift() ?? ''}${firstLetters.pop() ?? ''}`
+      }
     }
-    await this.profileRepo.savePicture(pictureUrl)
+    await this.profileRepo.savePicture(pictureUrl, initials)
   }
 }
 

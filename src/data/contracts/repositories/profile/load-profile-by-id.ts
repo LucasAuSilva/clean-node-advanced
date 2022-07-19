@@ -1,3 +1,3 @@
 export interface LoadProfileById {
-  loadById: (id: string) => Promise<void>
+  loadById: (id: string) => Promise<string | undefined>
 }
