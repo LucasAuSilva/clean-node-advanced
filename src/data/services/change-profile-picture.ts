@@ -10,11 +10,12 @@ export class ChangeProfilePicture {
   ) {}
 
   async perform ({ id, file }: ChangeProfilePictureDto): Promise<void> {
+    let pictureUrl: string | undefined
     if (file !== undefined) {
       const uuid = this.uniqueId.generate(id)
-      const pictureUrl = await this.fileStorage.upload(file, uuid)
-      await this.profileRepo.savePicture(pictureUrl)
+      pictureUrl = await this.fileStorage.upload(file, uuid)
     }
+    await this.profileRepo.savePicture(pictureUrl)
   }
 }
 

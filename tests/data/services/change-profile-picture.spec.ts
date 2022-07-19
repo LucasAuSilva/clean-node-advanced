@@ -39,16 +39,22 @@ describe('Change Profile Picture', () => {
   })
 
   it('should no call UploadFile when file is undefined', async () => {
-    const { sut, fileStorage, profileRepo } = makeSut()
-    await sut.perform({ id: 'any_id', file: undefined as any })
+    const { sut, fileStorage } = makeSut()
+    await sut.perform({ id: 'any_id', file: undefined })
     expect(fileStorage.upload).not.toHaveBeenCalled()
-    expect(profileRepo.savePicture).not.toHaveBeenCalled()
   })
 
   it('should call SaveProfilePicture with correct values', async () => {
     const { sut, profileRepo } = makeSut()
     await sut.perform({ id: 'any_id', file })
     expect(profileRepo.savePicture).toHaveBeenCalledWith('any_url_image')
+    expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call SaveProfilePicture with correct values when file is undefined', async () => {
+    const { sut, profileRepo } = makeSut()
+    await sut.perform({ id: 'any_id', file: undefined })
+    expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined)
     expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
   })
 })
