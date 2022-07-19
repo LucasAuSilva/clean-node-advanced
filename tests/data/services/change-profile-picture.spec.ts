@@ -34,46 +34,54 @@ const makeSut = (): SutTypes => {
 describe('Change Profile Picture', () => {
   const uuid = 'any_unique_id'
   const id = 'any_id'
+  const file = Buffer.from('any_buffer')
 
-  describe('When file is provided', () => {
-    const file = Buffer.from('any_buffer')
+  it('should call UploadFile with correct values', async () => {
+    const { sut, fileStorage } = makeSut()
+    await sut.perform({ id, file })
+    expect(fileStorage.upload).toHaveBeenCalledWith(file, uuid)
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+  })
 
-    it('should call UploadFile with correct values', async () => {
-      const { sut, fileStorage } = makeSut()
-      await sut.perform({ id, file })
-      expect(fileStorage.upload).toHaveBeenCalledWith(file, uuid)
-      expect(fileStorage.upload).toHaveBeenCalledTimes(1)
-    })
+  it('should call SaveProfilePicture with correct values', async () => {
+    const { sut, profileRepo } = makeSut()
+    await sut.perform({ id, file })
+    const profile = jest.mocked(Profile).mock.instances[0]
+    expect(profileRepo.savePicture).toHaveBeenCalledWith(profile.id, profile.pictureUrl, profile.initials)
+    expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
+  })
 
-    it('should call SaveProfilePicture with correct values', async () => {
-      const { sut, profileRepo } = makeSut()
-      await sut.perform({ id, file })
-      const profile = jest.mocked(Profile).mock.instances[0]
-      expect(profileRepo.savePicture).toHaveBeenCalledWith(profile.id, profile.pictureUrl, profile.initials)
-      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
-    })
+  it('should not call LoadProfileById if file is provided', async () => {
+    const { sut, profileRepo } = makeSut()
+    await sut.perform({ id, file })
+    expect(profileRepo.loadById).not.toHaveBeenCalled()
+  })
 
-    it('should not call LoadProfileById if file is provided', async () => {
-      const { sut, profileRepo } = makeSut()
-      await sut.perform({ id, file })
-      expect(profileRepo.loadById).not.toHaveBeenCalled()
+  it('should return correct data on success', async () => {
+    jest.mocked(Profile).mockImplementationOnce(id => ({
+      setPicture: jest.fn(),
+      id: 'any_id',
+      pictureUrl: 'any_url',
+      initials: 'any_initials'
+    }))
+    const { sut } = makeSut()
+    const result = await sut.perform({ id, file })
+    expect(result).toMatchObject({
+      pictureUrl: 'any_url',
+      initials: 'any_initials'
     })
   })
 
-  describe('When file is not provided', () => {
-    const file = undefined
+  it('should no call UploadFile when file is undefined', async () => {
+    const { sut, fileStorage } = makeSut()
+    await sut.perform({ id, file: undefined })
+    expect(fileStorage.upload).not.toHaveBeenCalled()
+  })
 
-    it('should no call UploadFile when file is undefined', async () => {
-      const { sut, fileStorage } = makeSut()
-      await sut.perform({ id, file })
-      expect(fileStorage.upload).not.toHaveBeenCalled()
-    })
-
-    it('should call LoadProfileById with correct values', async () => {
-      const { sut, profileRepo } = makeSut()
-      await sut.perform({ id, file })
-      expect(profileRepo.loadById).toHaveBeenCalledWith(id)
-      expect(profileRepo.loadById).toHaveBeenCalledTimes(1)
-    })
+  it('should call LoadProfileById with correct values', async () => {
+    const { sut, profileRepo } = makeSut()
+    await sut.perform({ id, file: undefined })
+    expect(profileRepo.loadById).toHaveBeenCalledWith(id)
+    expect(profileRepo.loadById).toHaveBeenCalledTimes(1)
   })
 })

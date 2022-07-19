@@ -9,7 +9,7 @@
 2. [x] Send a unique key to the FileStorage for doest overwrite some image that exists
 3. [x] Update the data from user with the URL of the picture returned from the FileStorage
 4. [x] Clean the field with the user initials
-5. [ ] Return the picture URL and the user initials
+5. [x] Return the picture URL and the user initials
 
 ## Alternative flow 1: User remove the picture
 1. [x] If the system doesn't receive a picture ignore steps 1 and 2

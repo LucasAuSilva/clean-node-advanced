@@ -10,7 +10,7 @@ export class ChangeProfilePicture {
     private readonly profileRepo: SaveProfilePicture & LoadProfileById
   ) {}
 
-  async perform ({ id, file }: ChangeProfilePictureDto): Promise<void> {
+  async perform ({ id, file }: ChangeProfilePictureDto): Promise<ChangeProfilePictureResult> {
     let pictureUrl: string | undefined
     let name: string | undefined
     if (file !== undefined) {
@@ -22,7 +22,9 @@ export class ChangeProfilePicture {
     const profile = new Profile(id)
     profile.setPicture(pictureUrl, name)
     await this.profileRepo.savePicture(profile.id, profile.pictureUrl, profile.initials)
+    return profile
   }
 }
 
 type ChangeProfilePictureDto = { id: string, file?: Buffer }
+type ChangeProfilePictureResult = { pictureUrl?: string, initials?: string }
