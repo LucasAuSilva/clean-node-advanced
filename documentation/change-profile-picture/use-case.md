@@ -26,5 +26,5 @@
 4. [x] Clean the field initials from user name
 
 ## Exception flow: Error on update the user picture
-1. [ ] Delete the picture created on FileStorage
+1. [x] Delete the picture created on FileStorage
 2. [ ] Repass the same error received
