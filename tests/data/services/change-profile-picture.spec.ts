@@ -105,4 +105,12 @@ describe('Change Profile Picture', () => {
       expect(fileStorage.delete).not.toHaveBeenCalled()
     })
   })
+
+  it('should rethrow if SaveProfilePicture throws', async () => {
+    const { sut, profileRepo } = makeSut()
+    const error = new Error('save_error')
+    profileRepo.savePicture.mockRejectedValueOnce(error)
+    const promise = sut.perform({ id, file })
+    await expect(promise).rejects.toThrow(error)
+  })
 })

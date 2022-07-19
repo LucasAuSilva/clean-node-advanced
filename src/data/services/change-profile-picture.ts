@@ -23,9 +23,9 @@ export class ChangeProfilePicture {
     profile.setPicture(pictureUrl, name)
     try {
       await this.profileRepo.savePicture(profile.id, profile.pictureUrl, profile.initials)
-    } catch {
+    } catch (error) {
       if (file !== undefined) await this.fileStorage.delete(uuid)
-      throw new Error()
+      throw error
     }
     return profile
   }
