@@ -17,13 +17,13 @@
 4. [x] Update the field user initials with the first and last letter of the name
 
 ## Alternative flow 1.1: User doesn't have last name
-4. [ ] Update the field initials with the first two letters of the name
+4. [x] Update the field initials with the first two letters of the name
 
 ## Alternative flow 1.2: User has the name if only one letter
-4. [ ] Update the field initials from user if the one letter
+4. [x] Update the field initials from user if the one letter
 
 ## Alternative flow 1.3: User doesn't has name
-4. [ ] Clean the field initials from user name
+4. [x] Clean the field initials from user name
 
 ## Exception flow: Error on update the user picture
 1. [ ] Delete the picture created on FileStorage

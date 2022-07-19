@@ -19,10 +19,14 @@ export class ChangeProfilePicture {
       const name = await this.profileRepo.loadById(id)
       if (name !== undefined) {
         const firstLetters = name.match(/\b(.)/g) ?? []
-        initials = `${firstLetters.shift() ?? ''}${firstLetters.pop() ?? ''}`
+        if (firstLetters.length > 1) {
+          initials = `${firstLetters.shift() ?? ''}${firstLetters.pop() ?? ''}`
+        } else {
+          initials = name.substring(0, 2)
+        }
       }
     }
-    await this.profileRepo.savePicture(pictureUrl, initials)
+    await this.profileRepo.savePicture(pictureUrl, initials?.toUpperCase())
   }
 }
 

@@ -72,6 +72,38 @@ describe('Change Profile Picture', () => {
       expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
     })
 
+    it('should call SaveProfilePicture with initials in UpperCase', async () => {
+      const { sut, profileRepo } = makeSut()
+      profileRepo.loadById.mockResolvedValueOnce('lucas augusto da silva')
+      await sut.perform({ id, file })
+      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, 'LS')
+      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
+    })
+
+    it('should initials be first 2 letters of first name if not exists last name', async () => {
+      const { sut, profileRepo } = makeSut()
+      profileRepo.loadById.mockResolvedValueOnce('lucas')
+      await sut.perform({ id, file })
+      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, 'LU')
+      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
+    })
+
+    it('should initials be first 1 letter with name has only 1 character', async () => {
+      const { sut, profileRepo } = makeSut()
+      profileRepo.loadById.mockResolvedValueOnce('l')
+      await sut.perform({ id, file })
+      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, 'L')
+      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
+    })
+
+    it('should initials be undefined if name is undefined', async () => {
+      const { sut, profileRepo } = makeSut()
+      profileRepo.loadById.mockResolvedValueOnce(undefined)
+      await sut.perform({ id, file })
+      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, undefined)
+      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
+    })
+
     it('should call LoadProfileById with correct values', async () => {
       const { sut, profileRepo } = makeSut()
       await sut.perform({ id, file })
