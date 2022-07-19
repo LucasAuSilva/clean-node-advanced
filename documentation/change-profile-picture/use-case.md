@@ -5,7 +5,7 @@
 * Picture
 
 ## Primary flow
-1. [ ] Save picture receive from an FileStorage
+1. [x] Save picture receives in a FileStorage
 2. [ ] Send a unique key to the FileStorage for doest overwrite some image that exists
 3. [ ] Update the data from user with the URL of the picture returned from the FileStorage
 4. [ ] Clean the field with the user initials
