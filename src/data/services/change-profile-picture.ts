@@ -1,3 +1,4 @@
+import { Profile } from '@/domain/models/profile'
 import { UploadFile } from '@/data/contracts/file-storage'
 import { UUIDGenerator } from '@/data/contracts/crypto'
 import { LoadProfileById, SaveProfilePicture } from '@/data/contracts/repositories/profile'
@@ -11,22 +12,16 @@ export class ChangeProfilePicture {
 
   async perform ({ id, file }: ChangeProfilePictureDto): Promise<void> {
     let pictureUrl: string | undefined
-    let initials: string | undefined
+    let name: string | undefined
     if (file !== undefined) {
       const uuid = this.uniqueId.generate(id)
       pictureUrl = await this.fileStorage.upload(file, uuid)
     } else {
-      const name = await this.profileRepo.loadById(id)
-      if (name !== undefined) {
-        const firstLetters = name.match(/\b(.)/g) ?? []
-        if (firstLetters.length > 1) {
-          initials = `${firstLetters.shift() ?? ''}${firstLetters.pop() ?? ''}`
-        } else {
-          initials = name.substring(0, 2)
-        }
-      }
+      name = await this.profileRepo.loadById(id)
     }
-    await this.profileRepo.savePicture(pictureUrl, initials?.toUpperCase())
+    const profile = new Profile(id)
+    profile.setPicture(pictureUrl, name)
+    await this.profileRepo.savePicture(profile.id, profile.pictureUrl, profile.initials)
   }
 }
 

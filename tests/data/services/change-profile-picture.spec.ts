@@ -1,9 +1,12 @@
+import { Profile } from '@/domain/models/profile'
 import { ChangeProfilePicture } from '@/data/services'
 import { UploadFile } from '@/data/contracts/file-storage'
 import { UUIDGenerator } from '@/data/contracts/crypto'
 import { LoadProfileById, SaveProfilePicture } from '@/data/contracts/repositories/profile'
 
 import { mock, MockProxy } from 'jest-mock-extended'
+
+jest.mock('@/domain/models/profile/user')
 
 type SutTypes = {
   sut: ChangeProfilePicture
@@ -45,7 +48,8 @@ describe('Change Profile Picture', () => {
     it('should call SaveProfilePicture with correct values', async () => {
       const { sut, profileRepo } = makeSut()
       await sut.perform({ id, file })
-      expect(profileRepo.savePicture).toHaveBeenCalledWith('any_url_image', undefined)
+      const profile = jest.mocked(Profile).mock.instances[0]
+      expect(profileRepo.savePicture).toHaveBeenCalledWith(profile.id, profile.pictureUrl, profile.initials)
       expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
     })
 
@@ -63,45 +67,6 @@ describe('Change Profile Picture', () => {
       const { sut, fileStorage } = makeSut()
       await sut.perform({ id, file })
       expect(fileStorage.upload).not.toHaveBeenCalled()
-    })
-
-    it('should call SaveProfilePicture with correct values when file is undefined', async () => {
-      const { sut, profileRepo } = makeSut()
-      await sut.perform({ id, file })
-      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, 'LS')
-      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
-    })
-
-    it('should call SaveProfilePicture with initials in UpperCase', async () => {
-      const { sut, profileRepo } = makeSut()
-      profileRepo.loadById.mockResolvedValueOnce('lucas augusto da silva')
-      await sut.perform({ id, file })
-      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, 'LS')
-      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
-    })
-
-    it('should initials be first 2 letters of first name if not exists last name', async () => {
-      const { sut, profileRepo } = makeSut()
-      profileRepo.loadById.mockResolvedValueOnce('lucas')
-      await sut.perform({ id, file })
-      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, 'LU')
-      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
-    })
-
-    it('should initials be first 1 letter with name has only 1 character', async () => {
-      const { sut, profileRepo } = makeSut()
-      profileRepo.loadById.mockResolvedValueOnce('l')
-      await sut.perform({ id, file })
-      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, 'L')
-      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
-    })
-
-    it('should initials be undefined if name is undefined', async () => {
-      const { sut, profileRepo } = makeSut()
-      profileRepo.loadById.mockResolvedValueOnce(undefined)
-      await sut.perform({ id, file })
-      expect(profileRepo.savePicture).toHaveBeenCalledWith(undefined, undefined)
-      expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
     })
 
     it('should call LoadProfileById with correct values', async () => {

@@ -1,3 +1,3 @@
 export interface SaveProfilePicture {
-  savePicture: (pictureUrl?: string, initials?: string) => Promise<void>
+  savePicture: (id: string, pictureUrl?: string, initials?: string) => Promise<void>
 }
