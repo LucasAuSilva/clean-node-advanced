@@ -8,17 +8,20 @@ class UUIDHandler {
   }
 }
 
+const makeSut = (): UUIDHandler => {
+  jest.mocked(v4).mockReturnValue('any_uuid')
+  return new UUIDHandler()
+}
+
 describe('UUID Handler', () => {
   it('should call uuid.v4', () => {
-    const sut = new UUIDHandler()
+    const sut = makeSut()
     sut.generate('any_key')
     expect(v4).toHaveBeenCalledTimes(1)
   })
 
   it('should return correct uuid', () => {
-    jest.mocked(v4).mockReturnValueOnce('any_uuid')
-    const sut = new UUIDHandler()
-
+    const sut = makeSut()
     const uuid = sut.generate('any_key')
 
     expect(uuid).toBe('any_key_any_uuid')
