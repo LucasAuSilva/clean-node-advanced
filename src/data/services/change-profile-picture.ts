@@ -14,9 +14,10 @@ export class ChangeProfilePicture {
     if (file !== undefined) {
       const uuid = this.uniqueId.generate(id)
       pictureUrl = await this.fileStorage.upload(file, uuid)
+    } else {
+      await this.profileRepo.loadById(id)
     }
     await this.profileRepo.savePicture(pictureUrl)
-    await this.profileRepo.loadById(id)
   }
 }
 

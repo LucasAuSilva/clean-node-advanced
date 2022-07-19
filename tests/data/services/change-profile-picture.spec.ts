@@ -64,4 +64,10 @@ describe('Change Profile Picture', () => {
     expect(profileRepo.loadById).toHaveBeenCalledWith('any_id')
     expect(profileRepo.loadById).toHaveBeenCalledTimes(1)
   })
+
+  it('should not call LoadProfileById if file is provided', async () => {
+    const { sut, profileRepo } = makeSut()
+    await sut.perform({ id: 'any_id', file })
+    expect(profileRepo.loadById).not.toHaveBeenCalled()
+  })
 })
