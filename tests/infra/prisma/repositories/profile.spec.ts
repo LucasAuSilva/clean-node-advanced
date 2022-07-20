@@ -45,5 +45,11 @@ describe('PrismaProfile Repository', () => {
       const name = await sut.loadById(id.toString())
       expect(name).toBe('any_name')
     })
+
+    it('should return undefined', async () => {
+      const { sut } = await makeSut()
+      const name = await sut.loadById('0')
+      expect(name).toBeUndefined()
+    })
   })
 })
