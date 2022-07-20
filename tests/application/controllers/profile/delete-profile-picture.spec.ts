@@ -1,20 +1,7 @@
 import { ChangeProfilePicture } from '@/domain/features/change-profile-picture'
+import { DeletePictureController } from '@/application/controllers/profile'
 import { Controller } from '@/application/controllers'
-import { HttpResponse, noContent } from '@/application/helpers'
 import { mock, MockProxy } from 'jest-mock-extended'
-
-type HttpRequest = { userId: string }
-
-class DeletePictureController extends Controller {
-  constructor (
-    private readonly changeProfilePicture: ChangeProfilePicture
-  ) { super() }
-
-  async perform ({ userId }: HttpRequest): Promise<HttpResponse> {
-    await this.changeProfilePicture.perform({ id: userId })
-    return noContent()
-  }
-}
 
 type SutTypes = {
   sut: DeletePictureController
