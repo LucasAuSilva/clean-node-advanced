@@ -1,9 +1,10 @@
 import { Profile } from '@/domain/models/profile'
+import { ChangeProfilePicture, ChangeProfilePictureDto, ChangeProfilePictureResult } from '@/domain/features/change-profile-picture'
 import { DeleteFile, UploadFile } from '@/data/contracts/file-storage'
 import { UUIDGenerator } from '@/data/contracts/crypto'
 import { LoadProfileById, SaveProfilePicture } from '@/data/contracts/repositories/profile'
 
-export class ChangeProfilePicture {
+export class ChangeProfilePictureService implements ChangeProfilePicture {
   constructor (
     private readonly fileStorage: UploadFile & DeleteFile,
     private readonly uniqueId: UUIDGenerator,
@@ -30,6 +31,3 @@ export class ChangeProfilePicture {
     return profile
   }
 }
-
-type ChangeProfilePictureDto = { id: string, file?: Buffer }
-type ChangeProfilePictureResult = { pictureUrl?: string, initials?: string }

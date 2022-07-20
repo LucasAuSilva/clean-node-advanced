@@ -1,5 +1,5 @@
 import { Profile } from '@/domain/models/profile'
-import { ChangeProfilePicture } from '@/data/services'
+import { ChangeProfilePictureService } from '@/data/services'
 import { DeleteFile, UploadFile } from '@/data/contracts/file-storage'
 import { UUIDGenerator } from '@/data/contracts/crypto'
 import { LoadProfileById, SaveProfilePicture } from '@/data/contracts/repositories/profile'
@@ -9,7 +9,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 jest.mock('@/domain/models/profile/user')
 
 type SutTypes = {
-  sut: ChangeProfilePicture
+  sut: ChangeProfilePictureService
   fileStorage: MockProxy<UploadFile & DeleteFile>
   uniqueId: MockProxy<UUIDGenerator>
   profileRepo: MockProxy<SaveProfilePicture & LoadProfileById>
@@ -22,7 +22,7 @@ const makeSut = (): SutTypes => {
   uniqueId.generate.mockReturnValue('any_unique_id')
   const fileStorage = mock<UploadFile & DeleteFile>()
   fileStorage.upload.mockResolvedValue('any_url_image')
-  const sut = new ChangeProfilePicture(fileStorage, uniqueId, profileRepo)
+  const sut = new ChangeProfilePictureService(fileStorage, uniqueId, profileRepo)
   return {
     sut,
     fileStorage,
