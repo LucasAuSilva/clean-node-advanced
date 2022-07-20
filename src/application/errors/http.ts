@@ -27,3 +27,17 @@ export class ForbiddenError extends Error {
     this.name = 'ForbiddenError'
   }
 }
+
+export class InvalidMimeTypeError extends Error {
+  constructor (allowed: string[]) {
+    super(`Unsupported type. Allowed types: ${allowed.join(', ')}`)
+    this.name = 'InvalidMimeTypeError'
+  }
+}
+
+export class MaxFileSizeError extends Error {
+  constructor (maxSizeInMb: number) {
+    super(`File upload limit is ${maxSizeInMb}MB`)
+    this.name = 'MaxFileSizeError'
+  }
+}

@@ -1,1 +1,2 @@
-export * from './delete-profile'
+export * from './delete-profile-picture'
+export * from './save-profile-picture'
