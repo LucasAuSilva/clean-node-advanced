@@ -29,12 +29,20 @@ describe('PrismaProfile Repository', () => {
   })
 
   describe('savePicture()', () => {
-    it('should update profile', async () => {
+    it('should update profile with pictureUrl', async () => {
       const { sut, prisma } = await makeSut()
       const { id } = await prisma.account.create({ data: { email: 'any_email', initials: 'any_initials' } })
       await sut.savePicture(id.toString(), 'any_url')
       const profile = await prisma.account.findUnique({ where: { id } })
       expect(profile).toMatchObject({ id, pictureUrl: 'any_url', initials: null })
+    })
+
+    it('should update profile with initials', async () => {
+      const { sut, prisma } = await makeSut()
+      const { id } = await prisma.account.create({ data: { email: 'any_email', pictureUrl: 'any_url' } })
+      await sut.savePicture(id.toString(), undefined, 'any_initials')
+      const profile = await prisma.account.findUnique({ where: { id } })
+      expect(profile).toMatchObject({ id, pictureUrl: null, initials: 'any_initials' })
     })
   })
 
