@@ -20,7 +20,7 @@ describe('Max FileSize', () => {
     expect(error).toBeUndefined()
   })
 
-  it('should return undefined if value is valid', () => {
+  it('should return undefined if value is valid at limit', () => {
     const buffer = Buffer.from(new ArrayBuffer(5 * 1024 * 1024))
     const sut = new MaxFileSize(5, buffer)
 

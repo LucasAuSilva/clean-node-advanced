@@ -7,7 +7,7 @@ export class DeletePictureController extends Controller {
     private readonly changeProfilePicture: ChangeProfilePicture
   ) { super() }
 
-  async perform ({ userId }: HttpRequest): Promise<HttpResponse> {
+  override async perform ({ userId }: HttpRequest): Promise<HttpResponse> {
     await this.changeProfilePicture.perform({ id: userId })
     return noContent()
   }
