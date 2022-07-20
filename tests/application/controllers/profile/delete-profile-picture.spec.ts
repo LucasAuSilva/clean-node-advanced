@@ -1,15 +1,16 @@
 import { ChangeProfilePicture } from '@/domain/features/change-profile-picture'
+import { Controller } from '@/application/controllers'
 import { HttpResponse, noContent } from '@/application/helpers'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 type HttpRequest = { userId: string }
 
-class DeletePictureController {
+class DeletePictureController extends Controller {
   constructor (
     private readonly changeProfilePicture: ChangeProfilePicture
-  ) {}
+  ) { super() }
 
-  async handle ({ userId }: HttpRequest): Promise<HttpResponse> {
+  async perform ({ userId }: HttpRequest): Promise<HttpResponse> {
     await this.changeProfilePicture.perform({ id: userId })
     return noContent()
   }
@@ -30,6 +31,11 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DeletePicture Controller', () => {
+  it('should extends Controller', () => {
+    const { sut } = makeSut()
+    expect(sut).toBeInstanceOf(Controller)
+  })
+
   it('should call ChangeProfilePicture with correct input', async () => {
     const { sut, changeProfilePicture } = makeSut()
 
