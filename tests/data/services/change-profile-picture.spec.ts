@@ -51,6 +51,14 @@ describe('Change Profile Picture', () => {
     expect(profileRepo.savePicture).toHaveBeenCalledTimes(1)
   })
 
+  it('should call SaveProfilePicture with correct values', async () => {
+    const { sut, profileRepo } = makeSut()
+    profileRepo.savePicture.mockResolvedValueOnce(undefined)
+    await sut.perform({ id, file })
+    const profile = jest.mocked(Profile).mock.instances[0]
+    expect(profileRepo.savePicture).toHaveBeenCalledWith(profile.id, profile.pictureUrl, profile.initials)
+  })
+
   it('should not call LoadProfileById if file is provided', async () => {
     const { sut, profileRepo } = makeSut()
     await sut.perform({ id, file })
