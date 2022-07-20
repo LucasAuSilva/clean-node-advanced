@@ -1,12 +1,12 @@
-import { ValidationBuilder, RequiredStringValidator } from '@/application/validation'
+import { ValidationBuilder, RequiredString } from '@/application/validation'
 
 describe('Validation Builder', () => {
-  it('should return a RequiredStringValidator', () => {
+  it('should return a RequiredString', () => {
     const validators = ValidationBuilder
       .of({ value: 'any_value', fieldName: 'any_name' })
       .required()
       .build()
 
-    expect(validators).toEqual([new RequiredStringValidator('any_value', 'any_name')])
+    expect(validators).toEqual([new RequiredString('any_value', 'any_name')])
   })
 })

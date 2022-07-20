@@ -1,5 +1,5 @@
 import { Validator } from '@/application/contracts'
-import { RequiredStringValidator } from '@/application/validation'
+import { RequiredString } from '@/application/validation'
 
 export class ValidationBuilder {
   private constructor (
@@ -13,7 +13,7 @@ export class ValidationBuilder {
   }
 
   required (): ValidationBuilder {
-    this._validators.push(new RequiredStringValidator(this.value, this.fieldName))
+    this._validators.push(new RequiredString(this.value, this.fieldName))
     return this
   }
 

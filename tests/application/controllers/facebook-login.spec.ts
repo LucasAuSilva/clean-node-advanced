@@ -1,7 +1,7 @@
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuth } from '@/domain/features/facebook-authentication'
 import { Controller, FacebookLoginController } from '@/application/controllers'
-import { RequiredStringValidator } from '@/application/validation'
+import { RequiredString } from '@/application/validation'
 import { UnauthorizedError } from '@/application/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -33,7 +33,7 @@ describe('FacebookLogin Controller', () => {
     const { sut } = makeSut()
     const validators = sut.buildValidators(token)
     expect(validators).toEqual([
-      new RequiredStringValidator('any_token', 'token')
+      new RequiredString('any_token', 'token')
     ])
   })
 
