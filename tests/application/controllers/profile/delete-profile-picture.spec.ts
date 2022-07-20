@@ -1,5 +1,5 @@
 import { ChangeProfilePicture } from '@/domain/features/change-profile-picture'
-import { mock } from 'jest-mock-extended'
+import { mock, MockProxy } from 'jest-mock-extended'
 
 type HttpRequest = { userId: string }
 
@@ -13,10 +13,23 @@ class DeletePictureController {
   }
 }
 
+type SutTypes = {
+  sut: DeletePictureController
+  changeProfilePicture: MockProxy<ChangeProfilePicture>
+}
+
+const makeSut = (): SutTypes => {
+  const changeProfilePicture = mock<ChangeProfilePicture>()
+  const sut = new DeletePictureController(changeProfilePicture)
+  return {
+    sut,
+    changeProfilePicture
+  }
+}
+
 describe('DeletePicture Controller', () => {
   it('should call ChangeProfilePicture with correct input', async () => {
-    const changeProfilePicture = mock<ChangeProfilePicture>()
-    const sut = new DeletePictureController(changeProfilePicture)
+    const { sut, changeProfilePicture } = makeSut()
 
     await sut.handle({ userId: 'any_user_id' })
 
