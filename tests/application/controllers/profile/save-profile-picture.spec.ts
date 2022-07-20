@@ -1,5 +1,6 @@
 import { ChangeProfilePicture } from '@/domain/features/change-profile-picture'
 import { SavePictureController } from '@/application/controllers/profile'
+import { Controller } from '@/application/controllers'
 import { RequiredFieldError, InvalidMimeTypeError, MaxFileSizeError } from '@/application/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -24,6 +25,11 @@ describe('SavePicture Controller', () => {
   const mimeType = 'image/png'
   const file = { buffer, mimeType }
   const userId = 'any_user_id'
+
+  it('should extends Controller', async () => {
+    const { sut } = makeSut()
+    expect(sut).toBeInstanceOf(Controller)
+  })
 
   it('should return 400 if file is undefined', async () => {
     const { sut } = makeSut()
