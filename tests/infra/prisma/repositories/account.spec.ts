@@ -87,7 +87,7 @@ describe('PrismaAccount Repository', () => {
 
       expect(account.length).toBe(1)
       expect(id).toBe(account[0].id.toString())
-      expect(account[0]).toEqual({
+      expect(account[0]).toMatchObject({
         id: result.id,
         email: 'any_email',
         name: 'other_name',

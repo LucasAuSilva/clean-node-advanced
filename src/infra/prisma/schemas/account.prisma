@@ -3,6 +3,8 @@ model Account {
   name       String? @map("nome")
   email      String
   facebookId String? @map("id_facebook")
+  pictureUrl String? @map("foto")
+  initials String? @map("iniciais")
 
   @@map("usuarios")
 }
