@@ -41,6 +41,7 @@ describe('AWS S3 File Storage', () => {
       })))
       file = Buffer.from('any_buffer')
     })
+
     it('should call put object with correct input', async () => {
       const sut = makeSut()
       await sut.upload(file, key)
@@ -72,6 +73,29 @@ describe('AWS S3 File Storage', () => {
       const sut = makeSut()
       const promise = sut.upload(file, key)
       await expect(promise).rejects.toThrow(error)
+    })
+  })
+  describe('delete()', () => {
+    let deleteObjectSpy: jest.Mock
+    let deleteObjectPromiseSpy: jest.Mock
+
+    beforeAll(() => {
+      deleteObjectPromiseSpy = jest.fn()
+      deleteObjectSpy = jest.fn().mockImplementation(() => ({ promise: deleteObjectPromiseSpy }))
+      jest.mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({
+        deleteObject: deleteObjectSpy
+      })))
+    })
+
+    it('should call deleteObject with correct input', async () => {
+      const sut = makeSut()
+      await sut.delete(key)
+      expect(deleteObjectSpy).toHaveBeenCalledWith({
+        Bucket: bucket,
+        Key: key
+      })
+      expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
+      expect(deleteObjectPromiseSpy).toHaveBeenCalledTimes(1)
     })
   })
 })
