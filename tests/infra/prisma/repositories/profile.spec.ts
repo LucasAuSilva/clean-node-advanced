@@ -54,9 +54,16 @@ describe('PrismaProfile Repository', () => {
       expect(name).toBe('any_name')
     })
 
-    it('should return undefined', async () => {
+    it('should return undefined if no profile exists', async () => {
       const { sut } = await makeSut()
       const name = await sut.loadById('0')
+      expect(name).toBeUndefined()
+    })
+
+    it('should return undefined if no name exits', async () => {
+      const { sut, prisma } = await makeSut()
+      const { id } = await prisma.account.create({ data: { email: 'any_email' } })
+      const name = await sut.loadById(id.toString())
       expect(name).toBeUndefined()
     })
   })
