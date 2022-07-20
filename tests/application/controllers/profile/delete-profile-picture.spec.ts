@@ -1,4 +1,5 @@
 import { ChangeProfilePicture } from '@/domain/features/change-profile-picture'
+import { HttpResponse, noContent } from '@/application/helpers'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 type HttpRequest = { userId: string }
@@ -8,8 +9,9 @@ class DeletePictureController {
     private readonly changeProfilePicture: ChangeProfilePicture
   ) {}
 
-  async handle ({ userId }: HttpRequest): Promise<void> {
+  async handle ({ userId }: HttpRequest): Promise<HttpResponse> {
     await this.changeProfilePicture.perform({ id: userId })
+    return noContent()
   }
 }
 
@@ -35,5 +37,16 @@ describe('DeletePicture Controller', () => {
 
     expect(changeProfilePicture.perform).toHaveBeenCalledWith({ id: 'any_user_id' })
     expect(changeProfilePicture.perform).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 204', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle({ userId: 'any_user_id' })
+
+    expect(httpResponse).toEqual({
+      statusCode: 204,
+      data: null
+    })
   })
 })
