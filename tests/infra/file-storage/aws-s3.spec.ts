@@ -75,6 +75,7 @@ describe('AWS S3 File Storage', () => {
       await expect(promise).rejects.toThrow(error)
     })
   })
+
   describe('delete()', () => {
     let deleteObjectSpy: jest.Mock
     let deleteObjectPromiseSpy: jest.Mock
@@ -96,6 +97,14 @@ describe('AWS S3 File Storage', () => {
       })
       expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
       expect(deleteObjectPromiseSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('should rethrow if deleteObject throws', async () => {
+      const error = new Error('delete_error')
+      deleteObjectPromiseSpy.mockRejectedValueOnce(error)
+      const sut = makeSut()
+      const promise = sut.delete(key)
+      await expect(promise).rejects.toThrow(error)
     })
   })
 })
