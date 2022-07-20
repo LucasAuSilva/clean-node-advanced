@@ -29,12 +29,21 @@ describe('PrismaProfile Repository', () => {
   })
 
   describe('savePicture()', () => {
-    it('should update user profile', async () => {
+    it('should update profile', async () => {
       const { sut, prisma } = await makeSut()
       const { id } = await prisma.account.create({ data: { email: 'any_email', initials: 'any_initials' } })
       await sut.savePicture(id.toString(), 'any_url')
       const profile = await prisma.account.findUnique({ where: { id } })
       expect(profile).toMatchObject({ id, pictureUrl: 'any_url', initials: null })
+    })
+  })
+
+  describe('loadById()', () => {
+    it('should load profile', async () => {
+      const { sut, prisma } = await makeSut()
+      const { id } = await prisma.account.create({ data: { email: 'any_email', name: 'any_name' } })
+      const name = await sut.loadById(id.toString())
+      expect(name).toBe('any_name')
     })
   })
 })
