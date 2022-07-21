@@ -13,21 +13,25 @@ describe('Multer Adapter', () => {
   let req: Request
   let res: Response
   let next: NextFunction
+  let uploadSpy: jest.Mock
+  let singleSpy: jest.Mock
+  let multerSpy: jest.Mock
+  let fakeMulter: jest.Mocked<typeof multer>
+  let sut: RequestHandler
 
-  beforeEach(() => {
+  beforeAll(() => {
     req = getMockReq({ body: { anyBody: 'any_body' }, locals: { anyLocals: 'any_locals' } })
     res = getMockRes().res
     next = getMockRes().next
+    uploadSpy = jest.fn()
+    singleSpy = jest.fn().mockImplementation(() => uploadSpy)
+    multerSpy = jest.fn().mockImplementation(() => ({ single: singleSpy }))
+    fakeMulter = multer as jest.Mocked<typeof multer>
+    jest.mocked(fakeMulter).mockImplementation(multerSpy)
+    sut = adaptMulter
   })
 
   it('should call single upload with correct values', async () => {
-    const uploadSpy = jest.fn()
-    const singleSpy = jest.fn().mockImplementation(() => uploadSpy)
-    const multerSpy = jest.fn().mockImplementation(() => ({ single: singleSpy }))
-    const fakeMulter = multer as jest.Mocked<typeof multer>
-    jest.mocked(fakeMulter).mockImplementation(multerSpy)
-    const sut = adaptMulter
-
     await sut(req, res, next)
 
     expect(multerSpy).toHaveBeenCalledWith()
