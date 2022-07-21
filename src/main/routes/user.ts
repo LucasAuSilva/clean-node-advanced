@@ -6,4 +6,5 @@ import { Router } from 'express'
 
 export default (router: Router): void => {
   router.delete('/users/picture', auth, adaptExpressRoute(makeSavePictureController()))
+  router.put('/users/picture', auth, adaptExpressRoute(makeSavePictureController()))
 }

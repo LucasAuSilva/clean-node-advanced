@@ -6,17 +6,16 @@ import request from 'supertest'
 import { sign } from 'jsonwebtoken'
 
 describe('User Routes', () => {
+  afterAll(async () => {
+    await PrismaHelper.disconnect()
+  })
+
+  afterEach(async () => {
+    const prisma = await PrismaHelper.connect()
+    await prisma.account.deleteMany({})
+    await PrismaHelper.disconnect()
+  })
   describe('DELETE /users/picture', () => {
-    afterAll(async () => {
-      await PrismaHelper.disconnect()
-    })
-
-    afterEach(async () => {
-      const prisma = await PrismaHelper.connect()
-      await prisma.account.deleteMany({})
-      await PrismaHelper.disconnect()
-    })
-
     it('should return 403 if no authorization header is provided', async () => {
       const app = await setupApp()
       const { status } = await request(app)
@@ -39,6 +38,17 @@ describe('User Routes', () => {
 
       expect(status).toBe(200)
       expect(body).toEqual({ pictureUrl: undefined, initials: 'LA' })
+    })
+  })
+
+  describe('PUT /users/picture', () => {
+    it('should return 403 if no authorization header is provided', async () => {
+      const app = await setupApp()
+      const { status } = await request(app)
+        .put('/api/users/picture')
+        .send({})
+
+      expect(status).toBe(403)
     })
   })
 })
