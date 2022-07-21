@@ -23,12 +23,12 @@ describe('Aws S3 Integration Test', () => {
     const onePixelImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjWFJ78z8ABr0C+g1yhF4AAAAASUVORK5CYII='
     const file = Buffer.from(onePixelImage, 'base64')
     const { sut } = makeSut()
-    const key = 'any_key.png'
+    const fileName = 'any_key.png'
 
-    const pictureUrl = await sut.upload(file, key)
+    const pictureUrl = await sut.upload(file, fileName)
     expect((await axios.get(pictureUrl)).status).toBe(200)
 
-    await sut.delete(key)
+    await sut.delete(fileName)
 
     await expect(axios.get(pictureUrl)).rejects.toThrow()
   })

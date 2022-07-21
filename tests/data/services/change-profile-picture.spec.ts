@@ -34,12 +34,21 @@ const makeSut = (): SutTypes => {
 describe('Change Profile Picture', () => {
   const uuid = 'any_unique_id'
   const id = 'any_id'
-  const file = Buffer.from('any_buffer')
+  const buffer = Buffer.from('any_buffer')
+  const mimeType = 'image/png'
+  const file = { buffer, mimeType }
 
   it('should call UploadFile with correct values', async () => {
     const { sut, fileStorage } = makeSut()
-    await sut.perform({ id, file })
-    expect(fileStorage.upload).toHaveBeenCalledWith(file, uuid)
+    await sut.perform({ id, file: { buffer, mimeType: 'image/png' } })
+    expect(fileStorage.upload).toHaveBeenCalledWith(buffer, `${uuid}.png`)
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call UploadFile with correct values', async () => {
+    const { sut, fileStorage } = makeSut()
+    await sut.perform({ id, file: { buffer, mimeType: 'image/jpeg' } })
+    expect(fileStorage.upload).toHaveBeenCalledWith(buffer, `${uuid}.jpeg`)
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 

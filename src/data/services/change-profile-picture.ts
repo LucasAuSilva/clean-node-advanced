@@ -16,7 +16,8 @@ export class ChangeProfilePictureService implements ChangeProfilePicture {
     let pictureUrl: string | undefined
     let name: string | undefined
     if (file !== undefined) {
-      pictureUrl = await this.fileStorage.upload(file, uuid)
+      const extension = file.mimeType.split('/')[1]
+      pictureUrl = await this.fileStorage.upload(file.buffer, `${uuid}.${extension}`)
     } else {
       name = await this.profileRepo.loadById(id)
     }

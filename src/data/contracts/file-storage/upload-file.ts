@@ -1,4 +1,4 @@
 
 export interface UploadFile {
-  upload: (file: Buffer, key: string) => Promise<string>
+  upload: (file: Buffer, fileName: string) => Promise<string>
 }

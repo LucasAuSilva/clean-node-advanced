@@ -1,3 +1,3 @@
 export interface DeleteFile {
-  delete: (key: string) => Promise<void>
+  delete: (fileName: string) => Promise<void>
 }

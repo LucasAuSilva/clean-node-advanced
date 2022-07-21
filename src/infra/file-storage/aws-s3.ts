@@ -15,22 +15,22 @@ export class AwsS3FileStorage implements UploadFile, DeleteFile {
     })
   }
 
-  async upload (file: Buffer, key: string): Promise<string> {
+  async upload (file: Buffer, fileName: string): Promise<string> {
     const s3 = new S3()
     await s3.putObject({
       Bucket: this.bucket,
-      Key: key,
+      Key: fileName,
       Body: file,
       ACL: 'public-read'
     }).promise()
-    return `https://${this.bucket}.s3.amazonaws.com/${encodeURIComponent(key)}`
+    return `https://${this.bucket}.s3.amazonaws.com/${encodeURIComponent(fileName)}`
   }
 
-  async delete (key: string): Promise<void> {
+  async delete (fileName: string): Promise<void> {
     const s3 = new S3()
     await s3.deleteObject({
       Bucket: this.bucket,
-      Key: key
+      Key: fileName
     }).promise()
   }
 }

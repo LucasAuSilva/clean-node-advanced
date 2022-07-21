@@ -46,7 +46,7 @@ describe('SavePicture Controller', () => {
     const { sut, changeProfilePicture } = makeSut()
     await sut.handle({ file, userId })
 
-    expect(changeProfilePicture.perform).toHaveBeenCalledWith({ id: userId, file: buffer })
+    expect(changeProfilePicture.perform).toHaveBeenCalledWith({ id: userId, file })
     expect(changeProfilePicture.perform).toHaveBeenCalledTimes(1)
   })
 

@@ -13,7 +13,7 @@ export class SavePictureController extends Controller {
   ) { super() }
 
   override async perform ({ file, userId }: HttpRequest): Promise<HttpResponse<Model>> {
-    const data = await this.changeProfilePicture.perform({ id: userId, file: file.buffer })
+    const data = await this.changeProfilePicture.perform({ id: userId, file })
     return ok(data)
   }
 
