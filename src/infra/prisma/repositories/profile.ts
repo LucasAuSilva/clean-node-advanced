@@ -13,14 +13,14 @@ export class PrismaProfileRepository implements SaveProfilePicture, LoadProfileB
     await this.prisma.account.update({
       where: { id: parseInt(id) },
       data: {
-        pictureUrl: pictureUrl === undefined ? null : pictureUrl,
-        initials: initials === undefined ? null : initials
+        pictureUrl: pictureUrl ?? null,
+        initials: initials ?? null
       }
     })
   }
 
   async loadById (id: string): Promise<string | undefined> {
     const profile = await this.prisma.account.findUnique({ where: { id: parseInt(id) }, select: { name: true } })
-    if (profile !== null) return profile.name === null ? undefined : profile.name
+    if (profile !== null) return profile.name ?? undefined
   }
 }
