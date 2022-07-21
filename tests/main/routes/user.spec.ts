@@ -42,6 +42,11 @@ describe('User Routes', () => {
   })
 
   describe('PUT /users/picture', () => {
+    const uploadSpy = jest.fn()
+    jest.mock('@/infra/file-storage/aws-s3', () => ({
+      AwsS3FileStorage: jest.fn().mockReturnValue({ upload: uploadSpy })
+    }))
+
     it('should return 403 if no authorization header is provided', async () => {
       const app = await setupApp()
       const { status } = await request(app)
@@ -49,6 +54,22 @@ describe('User Routes', () => {
         .send({})
 
       expect(status).toBe(403)
+    })
+
+    it('should return 200 with valid data', async () => {
+      uploadSpy.mockResolvedValueOnce('any_url')
+      const prisma = await PrismaHelper.connect()
+      const { id } = await prisma.account.create({ data: { email: 'any_email', name: 'Lucas augusto' } })
+      const authorization = sign({ key: id }, env.jwtSecret)
+      const app = await setupApp()
+
+      const { status, body } = await request(app)
+        .put('/api/users/picture')
+        .set({ authorization })
+        .attach('file', Buffer.from('any_buffer'), { filename: 'any_name', contentType: 'image/png' })
+
+      expect(status).toBe(200)
+      expect(body).toEqual({ pictureUrl: 'any_url', initials: undefined })
     })
   })
 })
