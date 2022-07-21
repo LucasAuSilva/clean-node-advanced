@@ -31,7 +31,7 @@ describe('Express Router', () => {
   let next: NextFunction
 
   beforeEach(() => {
-    req = getMockReq({ body: { any: 'any' } })
+    req = getMockReq({ body: { anyBody: 'any_body' }, locals: { anyLocals: 'any_locals' } })
     res = getMockRes().res
     next = getMockRes().next
   })
@@ -41,7 +41,7 @@ describe('Express Router', () => {
 
     await sut(req, res, next)
 
-    expect(controller.handle).toHaveBeenCalledWith({ any: 'any' })
+    expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', anyLocals: 'any_locals' })
     expect(controller.handle).toHaveBeenCalledTimes(1)
   })
 
@@ -62,6 +62,21 @@ describe('Express Router', () => {
     expect(res.status).toHaveBeenCalledWith(200)
     expect(res.status).toHaveBeenCalledTimes(1)
     expect(res.json).toHaveBeenCalledWith({ valid: 'valid_data' })
+    expect(res.json).toHaveBeenCalledTimes(1)
+  })
+
+  it('should respond with 204 and empty data', async () => {
+    const { sut, controller } = makeSut()
+    controller.handle.mockResolvedValue({
+      statusCode: 204,
+      data: {}
+    })
+
+    await sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(204)
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({})
     expect(res.json).toHaveBeenCalledTimes(1)
   })
 
