@@ -26,9 +26,9 @@ describe('User Routes', () => {
       expect(status).toBe(403)
     })
 
-    it('should return 204', async () => {
+    it('should return 200 with valid data', async () => {
       const prisma = await PrismaHelper.connect()
-      const { id } = await prisma.account.create({ data: { email: 'any_email' } })
+      const { id } = await prisma.account.create({ data: { email: 'any_email', name: 'Lucas augusto' } })
       const authorization = sign({ key: id }, env.jwtSecret)
       const app = await setupApp()
 
@@ -37,8 +37,8 @@ describe('User Routes', () => {
         .set({ authorization })
         .send({})
 
-      expect(status).toBe(204)
-      expect(body).toEqual({})
+      expect(status).toBe(200)
+      expect(body).toEqual({ pictureUrl: undefined, initials: 'LA' })
     })
   })
 })

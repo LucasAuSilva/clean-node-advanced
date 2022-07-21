@@ -29,6 +29,6 @@ export class ChangeProfilePictureService implements ChangeProfilePicture {
       if (file !== undefined) await this.fileStorage.delete(uuid)
       throw error
     }
-    return profile
+    return { initials: profile.initials, pictureUrl: profile.pictureUrl }
   }
 }

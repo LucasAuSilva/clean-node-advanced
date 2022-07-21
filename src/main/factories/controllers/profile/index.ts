@@ -1,1 +1,1 @@
-export * from './delete-picture'
+export * from './save-picture'

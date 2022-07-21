@@ -4,8 +4,8 @@ import { HttpResponse, ok } from '@/application/helpers'
 import { Validator } from '@/application/contracts'
 import { ValidationBuilder as Builder } from '@/application/validation'
 
-type HttpRequest = { file: { buffer: Buffer, mimeType: string }, userId: string }
-type Model = Error | { initials?: string, pictureUrl?: string }
+type HttpRequest = { file?: { buffer: Buffer, mimeType: string }, userId: string }
+type Model = { initials?: string, pictureUrl?: string }
 
 export class SavePictureController extends Controller {
   constructor (
@@ -18,6 +18,7 @@ export class SavePictureController extends Controller {
   }
 
   override buildValidators ({ file }: HttpRequest): Validator[] {
+    if (file === undefined) return []
     return [
       ...Builder.of({ value: file, fieldName: 'file' })
         .required()
