@@ -58,4 +58,13 @@ describe('Multer Adapter', () => {
     expect(res.json).toHaveBeenCalledWith({ error: new ServerError(error).message })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
+
+  it('should not add file to req.locals', async () => {
+    uploadSpy = jest.fn().mockImplementationOnce((_req, _res, _next) => {
+      _next()
+    })
+    await sut(req, res, next)
+
+    expect(req.locals).toEqual({ anyLocals: 'any_locals' })
+  })
 })
