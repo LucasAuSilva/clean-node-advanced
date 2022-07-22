@@ -5,4 +5,4 @@ node_modules
 coverage
 .env
 tests/**/test-db
-
+my.secrets
