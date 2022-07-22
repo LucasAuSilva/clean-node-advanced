@@ -1,0 +1,22 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deploy develop
+
+on:
+  workflow_run:
+    workflows: [Build CI]
+    types: [completed]
+    branches: [develop, master]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy heroku develop
+      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: "clean-node-advanced-develop" #Must be unique in Heroku
+        heroku_email: "silvaaugustolucas@gmail.com"
+        usedocker: true
