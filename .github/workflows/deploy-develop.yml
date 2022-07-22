@@ -11,12 +11,10 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Deploy heroku develop
-      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-      with:
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: "clean-node-advanced-develop" #Must be unique in Heroku
-        heroku_email: "silvaaugustolucas@gmail.com"
-        usedocker: true
+      - uses: actions/checkout@v2
+      - name: Deploy to Heroku
+        uses: behe/heroku-build@v1.1
+        with:
+          app-name: "clean-node-advanced-develop"
+          api-key: "${{secrets.HEROKU_API_KEY}}"
